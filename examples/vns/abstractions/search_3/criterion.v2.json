@@ -1,12 +1,12 @@
 {
   "note": "[τ] every step criterion v1 admits, and the certificate of a tour relative to the record: every move that shortens it leads to a tour recorded in the rounds before its own",
   "inputs": {
-    "context": [
-      "prev",
-      "rolls",
-      "opts",
-      "steps"
-    ],
+    "context": {
+      "prev": "prev",
+      "rolls": "rolls",
+      "opts": "opts",
+      "steps": "history"
+    },
     "candidate": {
       "name": "w",
       "type": "Step"

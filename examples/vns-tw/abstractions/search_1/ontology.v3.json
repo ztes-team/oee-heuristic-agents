@@ -4,13 +4,13 @@
     "scenario": "M"
   },
   "inputs": {
-    "context": [
-      "prev",
-      "rolls",
-      "inc",
-      "steps",
-      "scens"
-    ]
+    "context": {
+      "prev": "prev",
+      "rolls": "rolls",
+      "inc": "inc",
+      "steps": "history",
+      "scens": "scens"
+    }
   },
   "returns": "Step",
   "body": {

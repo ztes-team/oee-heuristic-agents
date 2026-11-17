@@ -1,12 +1,12 @@
 {
   "note": "[ω] the asymmetric neighborhood, synchronous cooperation: as v1, but the descent does not take a move to a tour recorded in the finished rounds while another improving move exists",
   "inputs": {
-    "context": [
-      "prev",
-      "rolls",
-      "inc",
-      "steps"
-    ]
+    "context": {
+      "prev": "prev",
+      "rolls": "rolls",
+      "inc": "inc",
+      "steps": "history"
+    }
   },
   "returns": "Step",
   "body": {

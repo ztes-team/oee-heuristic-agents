@@ -80,6 +80,7 @@
     "before": {"from": "$self", "select": "last", "type": "Best", "default": {"r": -1, "src": [0, -1], "walk": [], "value": [0, 0, 0, 0], "improved": false}},
     "opts": {"from": ["search_1", "search_2", "search_3"], "select": "all", "type": "Step", "where": "x['kind'] == 'opt'", "note": "the certified local optima of all searchers"},
     "steps": {"from": ["search_1", "search_2", "search_3"], "select": "all", "type": "Step"},
+    "history": {"from": ["search_1", "search_2", "search_3"], "select": "all", "type": "Step", "frozen": true, "note": "the steps of all searchers, each decoded once and shared (immutable): the record the asymmetric neighborhood is resolved against"},
     "bests": {"from": "incumbent", "select": "all", "type": "Best"}
   },
   "plan": [

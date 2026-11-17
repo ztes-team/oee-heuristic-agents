@@ -134,6 +134,12 @@ C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C). It reads only rounds that are finished 
 complete horizon, so the synchronous form keeps the same record under every schedule. The
 criterion is that of v1, which admits any improving move: the new form is a change of ontology alone (D2).
 
+v3 reads the steps of all searchers through the binding `history`, declared `"frozen": true`: ZTES
+decodes each recorded step once and shares it between invocations, instead of decoding the whole
+history at every step (a cost that grows with the square of the record). The values are immutable,
+so a tour in them is a tuple; `same_tour` compares element by element. v4 and criterion v2 read it
+the same way. The histories are those of a plain binding; v3 runs in 0.21 s instead of 0.35 s.
+
 With seed 7 the asymmetric form finds 974 in round 3 and reaches 937 in round 4, as v1 does, with
 11 returns instead of 14. Over seeds 1–40 it reaches the optimum in 28 runs, v1 in 22; it ends
 shorter than v1 in 9 seeds, longer in 1, and equal in 30, with 325 moves per run on average against

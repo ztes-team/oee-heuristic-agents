@@ -37,7 +37,8 @@ As in `vns`, section 3: `draw` (boundary), `search_1`–`search_3`, `incumbent`,
 differs from that of `vns` only where the instance and the neighborhood differ: `segment_moves`,
 `change`, `exchange`, and `same_tour`, which here compares walks exactly, since a cycle read
 backwards is another tour. Searcher ontology v1 (synchronous), v2 (asynchronous) and v3
-(asymmetric neighborhood) are those of `vns`; there is no v4, and one criterion.
+(asymmetric neighborhood) are those of `vns`, v3 reading the history of the searchers through the
+frozen binding `history`; there is no v4, and one criterion.
 
 ## 4. The forms and what they show
 
