@@ -1,18 +1,18 @@
 {
   "note": "[ω] asynchronous cooperation: shake the best local optimum certified so far, as it stands",
   "requires": {
-    "world": "M"
+    "scenario": "M"
   },
   "inputs": {
     "context": [
       "prev",
       "rolls",
       "opts",
-      "worlds"
+      "scens"
     ]
   },
   "returns": "Step",
   "body": {
-    "result": "searcher_v2(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, opts, worlds)"
+    "result": "searcher_v2(I, S, R, KMAX, N, M, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, opts, scens)"
   }
 }

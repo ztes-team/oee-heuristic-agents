@@ -76,6 +76,28 @@ def scenarios(D, worlds, N, RHO):
     return [scenario(D, w[0], N, RHO) for w in worlds]
 
 
+def scenario_event(D, N, RHO, worlds, done):
+    """[ω] The next scenario of the world: its number, the seed the world recorded for it, and its
+    travel times. A scenario is a pure function of its seed, but it is computed here once and
+    recorded, so that every searcher and every criterion reads it from the record instead of
+    computing it again at each invocation. None when every recorded seed has its scenario."""
+    if done >= len(worlds):
+        return None
+    seed = worlds[done][0]
+    return {"s": done, "seed": seed, "T": scenario(D, seed, N, RHO)}
+
+
+def recorded_scenarios(scens, M):
+    """[C] The travel times of the M scenarios as the abstraction scenario recorded them (read
+    through a map: scenario s → its travel times); None while one of them is not recorded."""
+    out = []
+    for s in range(M):
+        if s not in scens:
+            return None
+        out.append(scens[s])
+    return out
+
+
 # ---- the state of a tour: its schedule, where it stops being admissible, and its value ----
 
 def state(D, A, B, PAIRS, SCEN, walk):
@@ -397,23 +419,29 @@ def vns_step_asym(I, S, R, KMAX, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls
     return vns_step(I, S, R, KMAX, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls, source, known)
 
 
-def searcher_v1(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, worlds):
-    """[ω] v1: synchronous cooperation, the scenarios of the recorded world."""
-    SCEN = scenarios(D, worlds, N, RHO)
+def searcher_v1(I, S, R, KMAX, N, M, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, scens):
+    """[ω] v1: synchronous cooperation, on the recorded scenarios of the world."""
+    SCEN = recorded_scenarios(scens, M)
+    if SCEN is None:
+        return None
     source = source_sync(START, D, A, B, PAIRS, SCEN, ALLOW, prev, inc)
     return vns_step(I, S, R, KMAX, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls, source, None)
 
 
-def searcher_v2(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, opts, worlds):
+def searcher_v2(I, S, R, KMAX, N, M, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, opts, scens):
     """[ω] v2: asynchronous cooperation."""
-    SCEN = scenarios(D, worlds, N, RHO)
+    SCEN = recorded_scenarios(scens, M)
+    if SCEN is None:
+        return None
     source = source_async(START, D, A, B, PAIRS, SCEN, ALLOW, prev, opts)
     return vns_step(I, S, R, KMAX, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls, source, None)
 
 
-def searcher_v3(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, steps, worlds):
+def searcher_v3(I, S, R, KMAX, N, M, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, steps, scens):
     """[ω] v3: synchronous cooperation, the asymmetric neighborhood."""
-    SCEN = scenarios(D, worlds, N, RHO)
+    SCEN = recorded_scenarios(scens, M)
+    if SCEN is None:
+        return None
     source = source_sync(START, D, A, B, PAIRS, SCEN, ALLOW, prev, inc)
     return vns_step_asym(I, S, R, KMAX, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls, source, steps)
 
@@ -458,9 +486,11 @@ def admissible(I, S, R, KMAX, N, START, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev
     return not any(lowers(D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev["walk"], sp, m, v) for m in range(len(MOVES)))
 
 
-def searcher_criterion(I, S, R, KMAX, N, RHO, START, D, A, B, PAIRS, ALLOW, MOVES, prev, rolls, opts, worlds, w):
-    """[τ] The criterion of a searcher on the scenarios of the recorded world."""
-    return admissible(I, S, R, KMAX, N, START, D, A, B, PAIRS, scenarios(D, worlds, N, RHO), ALLOW, MOVES, prev, rolls, opts, w)
+def searcher_criterion(I, S, R, KMAX, N, M, START, D, A, B, PAIRS, ALLOW, MOVES, prev, rolls, opts, scens, w):
+    """[τ] The criterion of a searcher, on the recorded scenarios of the world; false while one of
+    them is not recorded."""
+    SCEN = recorded_scenarios(scens, M)
+    return SCEN is not None and admissible(I, S, R, KMAX, N, START, D, A, B, PAIRS, SCEN, ALLOW, MOVES, prev, rolls, opts, w)
 
 
 # ---- the incumbent and the indicators ----

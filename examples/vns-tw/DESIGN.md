@@ -63,8 +63,9 @@ in 8–9 of 40 seeds, against 2–6 for the best move over the whole neighborhoo
 |---|---|---|---|
 | `draw` | boundary, the algorithm's chance | KMAX move indices | a well-formed draw within S·R |
 | `world` | boundary, the environment's chance | the seed of one scenario | M seeds |
+| `scenario` | the travel times of each scenario | the scenario of the next recorded seed | equal to its definition |
 | `audit` | boundary, the environment's chance | the seed of the audit scenarios | one seed |
-| `search_1`–`search_3` | the searchers | the next step: shake, repair, move, or certificate (requires the M seeds of the world) | the step states its tour truly and is a step of VNS (below) |
+| `search_1`–`search_3` | the searchers | the next step: shake, repair, move, or certificate (requires the M recorded scenarios) | the step states its tour truly and is a step of VNS (below) |
 | `incumbent` | the best after each round | lexicographic best of the round's certificates and the previous incumbent | equal to its definition |
 | `kpi` | indicators | read from the record | equal to their definition |
 
@@ -132,14 +133,23 @@ The optimum is the sample-average one (3,492) with the chance constraint and the
   (ALLOW is never used), yet the audit gives as little as 89.8 %, the value of the sample-average
   optimum itself.
 
+**The scenarios are recorded once.** A scenario is a pure function of its seed, and the
+searchers and their criteria need all M of them at every invocation. Computing them there each
+time took most of the run (10,840 times in one run). The abstraction `scenario` computes each once,
+from the seed the world recorded, and records its travel times; the searchers read them through a
+map binding. What is computed once and reused is thus in the record, on the epistemic axis, with a
+criterion that checks it, and not in a cache outside it. The histories of the searchers and the
+indicators are those of the earlier version; a run takes about 6 s instead of 16.
+
 ## 6. Plan and expected end
 
-Phases 1 and 2; phase 3 until terminal; one KPI step. The world records its 20 seeds first (the
-searchers require them); then R = 10 rounds of S = 3 searchers. The asynchronous form records
+Phases 1 and 2; phase 3 until terminal; one KPI step. The world records its 20 seeds first, and
+`scenario` the travel times of each (the searchers require them); then R = 10 rounds of S = 3
+searchers. The asynchronous form records
 ontology v2 before phase 3, the asymmetric form v2 and v3 (versions without gaps). The deterministic
 problem is the same system with ALLOW = M: every scenario may fail.
 
-With draw seed 1, world seed 11 and audit seed 999: 327 events. The incumbent goes 3,612 (searcher
+With draw seed 1, world seed 11 and audit seed 999: 349 events. The incumbent goes 3,612 (searcher
 1, round 0), 3,504 (searcher 2, round 6), 3 ‰ above the sample-average optimum; it is on time in all
 20 scenarios of the world and in 994 of the 1,000 of the audit. Of the 93 repairs, 73 were of a late
 city and 20 of a premature one; 26 of the 30 rounds certified the tour they shook.
@@ -153,6 +163,7 @@ lib.py                           the neighborhood, the scenarios from a seed, th
 generate.py                      how the windows and the precedence pairs were made (not executed by ZTES)
 optima.json                      the deterministic and the sample-average optimum (HiGHS, not executed by ZTES)
 abstractions/draw/, world/, audit/   [ω] boundary   [τ] well-formed within the budget
+abstractions/scenario/           [ω] the travel times of the next recorded seed   [τ] equal to its definition
 abstractions/search_1/ … _3/     abstraction.json (I); [ω] v1 synchronous, v2 asynchronous, v3 asymmetric   [τ] a true step of VNS
 abstractions/incumbent/          [ω] the best after a round   [τ] equal to its definition
 abstractions/kpi/                [ω] indicators   [τ] each equal to its definition

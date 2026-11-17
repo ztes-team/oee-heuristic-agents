@@ -1,0 +1,13 @@
+{
+  "note": "[ω] the travel times of the next scenario, from the seed the world recorded for it: computed once and recorded, so that the searchers read them instead of computing them at every invocation",
+  "inputs": {
+    "context": [
+      "worlds",
+      "scens_n"
+    ]
+  },
+  "returns": "Scenario",
+  "body": {
+    "result": "scenario_event(D, N, RHO, worlds, scens_n)"
+  }
+}

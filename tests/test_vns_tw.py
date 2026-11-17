@@ -3,7 +3,7 @@ precedence constraints, under a recorded environment.
 
 The evaluation of a tour (schedule, lateness, precedence, the scenarios it fails) is written here
 again, independently of lib.py; only the definition of a scenario from its recorded seed and of the
-audit scenarios is taken from lib.py, since it is part of the instance. A run takes about fifteen
+audit scenarios is taken from lib.py, since it is part of the instance. A run takes about six
 seconds, so each form is run once.
 """
 import importlib.util
@@ -151,6 +151,20 @@ def test_meets_its_expected_end_and_replays(central):
     s, C = central
     assert check_expect(s, C, log=quiet) == []
     assert verify(C) == []
+
+
+def test_the_scenarios_are_recorded_once_and_read_by_the_searchers(central):
+    """Each scenario of the world is computed once, by the abstraction scenario, and recorded: one
+    event per recorded seed, equal to its definition. The searchers and their criteria read the
+    scenarios from the record: their horizon holds scenario, and not world."""
+    C = central[1]
+    rec = values(C, "scenario")
+    assert [x["s"] for x in rec] == list(range(C0["M"]))
+    assert [x["seed"] for x in rec] == [w[0] for w in values(C, "world")]
+    assert [x["T"] for x in rec] == _scenarios(C)
+    for i in (1, 2, 3):
+        horizon = lookups.horizon(C, f"search_{i}")
+        assert "scenario" in horizon and "world" not in horizon
 
 
 def test_the_exact_optima_and_the_bias_of_the_sample(central):

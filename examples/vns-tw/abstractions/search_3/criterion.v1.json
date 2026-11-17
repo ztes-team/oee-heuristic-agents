@@ -5,7 +5,7 @@
       "prev",
       "rolls",
       "opts",
-      "worlds"
+      "scens"
     ],
     "candidate": {
       "name": "w",
@@ -13,6 +13,6 @@
     }
   },
   "body": {
-    "result": "searcher_criterion(I, S, R, KMAX, N, RHO, START, D, A, B, PAIRS, ALLOW, MOVES, prev, rolls, opts, worlds, w)"
+    "result": "searcher_criterion(I, S, R, KMAX, N, M, START, D, A, B, PAIRS, ALLOW, MOVES, prev, rolls, opts, scens, w)"
   }
 }

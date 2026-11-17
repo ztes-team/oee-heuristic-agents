@@ -14,7 +14,7 @@ directory, as JSON specifications and one `lib.py` of bounded functions.
 |---|---|---|---|---|
 | [`vns`](examples/vns/DESIGN.md) | variable neighborhood search by three cooperating searchers on fri26 (TSPLIB, symmetric, optimum 937) | 5 | 390 | every loop of VNS is interaction; each local optimum is a certificate; the criterion admits any step of VNS (D2); synchronous cooperation gives the same record under every schedule, with no lock, no message and no master process; the asymmetric neighborhood and the certificate relative to the record |
 | [`vns-atsp`](examples/vns-atsp/DESIGN.md) | the same on ftv38 (TSPLIB, asymmetric, optimum 1,530) | 5 | 1,195 | a neighborhood that keeps the direction of every arc it does not cut; nothing in the lifting changes; the asymmetric neighborhood reaches a shorter tour |
-| [`vns-tw`](examples/vns-tw/DESIGN.md) | the same on ftv38 with time windows and precedence constraints, under a recorded environment | 7 | 327 | a late city is False and a premature one Not Yet, and the prefix order gives the repair rule; a chance constraint on recorded scenarios and an audit of the probability of being on time; three sources of chance (algorithm, schedule, environment) in one record |
+| [`vns-tw`](examples/vns-tw/DESIGN.md) | the same on ftv38 with time windows and precedence constraints, under a recorded environment | 8 | 349 | a late city is False and a premature one Not Yet, and the prefix order gives the repair rule; a chance constraint on recorded scenarios and an audit of the probability of being on time; three sources of chance (algorithm, schedule, environment) in one record |
 | [`vns-hk`](examples/vns-hk/DESIGN.md) | the searchers of `vns` beside 26 city abstractions that compute a Held–Karp lower bound on fri26 | 33 | 934 | heterogeneous agents in one record: the cities are the dual, each moves its own potential, and a minimum 1-tree is admitted in each round; the bound proves the incumbent optimal, a claim about every tour made one admitted event; aimed at the incumbent the cities need 18 rounds, aimed at the starting tour 330 |
 
 ## vns: variable neighborhood search by cooperating searchers
@@ -60,7 +60,8 @@ On ftv38 every city gets a time window and ten pairs of cities a precedence. A c
 its window closes is late, and no change after it can repair that (False, an upper set of the
 prefix order); a city visited before one it must follow is premature (Not Yet). Every step records
 which of the two stops its tour, and the repair cuts before it. The travel times vary by scenario:
-the boundary `world` records 20 seeds, a tour must be on time in all but 2 of their scenarios, and
+the boundary `world` records 20 seeds, `scenario` the travel times of each, once (the searchers read
+them from the record), a tour must be on time in all but 2 of the scenarios, and
 the boundary `audit` records one more seed for 1,000 scenarios the search never sees. The
 deterministic optimum (3,415) is on time in 457 of these; the sample-average optimum (3,492) in all
 20 scenarios of the world but only 898 of the audit, so the sample overstates the probability it
@@ -92,7 +93,7 @@ python -m ztes run examples/vns               # under the agenda: the report, R2
 python -m ztes run examples/vns --workers     # phase 3 by one worker per abstraction
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
 python -m ztes run examples/vns-atsp
-python -m ztes run examples/vns-tw         # about 15 s, and as long for R2
+python -m ztes run examples/vns-tw         # about 6 s, and as long for R2
 python -m ztes run examples/vns-hk
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
@@ -153,6 +154,7 @@ each of its own, and check what the `DESIGN.md` files claim.
 | `test_both_synchronous_forms_give_the_same_histories_by_workers` (vns-atsp) | v1 and v3 by workers under a random schedule: the histories of the agenda |
 | `test_the_generator_reproduces_the_instance` (vns-tw) | `generate.py` gives the windows and pairs of `system.json`; its reference tour is feasible |
 | `test_meets_its_expected_end_and_replays` (vns-tw) | `expect` and R2 |
+| `test_the_scenarios_are_recorded_once_and_read_by_the_searchers` (vns-tw) | one event of `scenario` per recorded seed, equal to its definition; the searchers read the scenarios from the record (their horizon holds `scenario`, not `world`) |
 | `test_the_exact_optima_and_the_bias_of_the_sample` (vns-tw) | the HiGHS optima: 3,415 fails 14 of the 20 scenarios and is on time in 457 of 1,000 audit scenarios; 3,492 fails none of the 20 but is on time in only 898 |
 | `test_the_incremental_evaluation_equals_the_full_one` (vns-tw) | the evaluation of a move from the state of the tour before it agrees with a full evaluation written in the test |
 | `test_every_step_states_its_tour_truly_and_is_a_step_of_vns` (vns-tw) | every step's value and status are true; every repair and move lowers the value; the final certificate holds by brute force over 9,139 moves and 20 scenarios |

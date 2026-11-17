@@ -1,7 +1,7 @@
 {
   "system": "vns-tw",
   "title": "Variable neighborhood search by three cooperating searchers on ftv38 with time windows and precedence constraints, under a recorded environment: three sources of chance in one record",
-  "abstractions": ["draw", "world", "audit", "search_1", "search_2", "search_3", "incumbent"],
+  "abstractions": ["draw", "world", "scenario", "audit", "search_1", "search_2", "search_3", "incumbent"],
   "kpi": "kpi",
   "sources": {"draw": {"random": {"seed": 1, "size": 3, "below": 9139}},
               "world": {"random": {"seed": 11, "size": 1, "below": 4294967296}},
@@ -9,6 +9,7 @@
   "types": {
     "Draw": {"list": "integer"},
     "Seed": {"list": "integer"},
+    "Scenario": {"record": {"s": "integer", "seed": "integer", "T": {"list": {"list": "integer"}}}},
     "Step": {"record": {"i": "integer", "r": "integer", "k": "integer", "kind": "text", "src": {"list": "integer"}, "src_value": {"list": "integer"},
                         "m": "integer", "walk": {"list": "integer"}, "value": {"list": "integer"}, "first": "integer", "status": "text", "fails": "integer"}},
     "Best": {"record": {"r": "integer", "src": {"list": "integer"}, "walk": {"list": "integer"}, "value": {"list": "integer"}, "improved": "boolean"}},
@@ -70,6 +71,8 @@
     "rolls": {"from": "draw", "select": "all", "type": "Draw", "note": "the recorded draws; searcher I uses draw r·S + I − 1 in round r"},
     "worlds_n": {"from": "world", "select": "count"},
     "worlds": {"from": "world", "select": "all", "type": "Seed", "note": "the recorded seeds of the M scenarios of the environment"},
+    "scens_n": {"from": "$self", "select": "count", "note": "scenarios already recorded"},
+    "scens": {"from": "scenario", "select": "map", "type": "Scenario", "key": "x['s']", "value": "x['T']", "note": "scenario s → its travel times, as the abstraction scenario recorded them"},
     "audits_n": {"from": "audit", "select": "count"},
     "audits": {"from": "audit", "select": "all", "type": "Seed"},
     "prev": {"from": "$self", "select": "last", "type": "Step", "default": {"i": 0, "r": -1, "k": 0, "kind": "opt", "src": [0, -1], "src_value": [0, 0, 0, 0], "m": -1, "walk": [], "value": [0, 0, 0, 0], "first": -1, "status": "true", "fails": 0}, "note": "the searcher's last step; before round 0 it stands as if a round had been certified"},
@@ -87,8 +90,8 @@
   ],
   "expect": {
     "note": "synchronous cooperation gives the same record under every schedule, so expect has no any_schedule part",
-    "events": 327,
-    "states": {"draw": "closed", "world": "closed", "audit": "closed", "search_1": "wait", "search_2": "wait", "search_3": "wait", "incumbent": "wait"},
+    "events": 349,
+    "states": {"draw": "closed", "world": "closed", "scenario": "wait", "audit": "closed", "search_1": "wait", "search_2": "wait", "search_3": "wait", "incumbent": "wait"},
     "last": {"incumbent": {"r": 9, "src": [2, 6], "value": [0, 0, 0, 3504]}},
     "values": {"kpi": [{"profile": 1, "rounds": 10, "moves": 92, "repairs": 93, "repairs_false": 73, "repairs_not_yet": 20, "returns": 26,
                         "optima": 30, "best": [0, 0, 0, 3504], "found_by": [2, 6], "feasible": true, "on_time": 20, "audit_on_time": 994,

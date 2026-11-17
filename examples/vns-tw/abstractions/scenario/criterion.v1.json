@@ -1,0 +1,16 @@
+{
+  "note": "[τ] the scenario of the next recorded seed, equal to its definition",
+  "inputs": {
+    "context": [
+      "worlds",
+      "scens_n"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Scenario"
+    }
+  },
+  "body": {
+    "result": "w == scenario_event(D, N, RHO, worlds, scens_n)"
+  }
+}
