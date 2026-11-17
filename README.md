@@ -80,7 +80,14 @@ python -m ztes run examples/vns --record DIR  # keep the record; then: python -m
 python -m ztes run examples/vns-atsp
 python -m ztes run examples/vns-tw         # about 15 s, and as long for R2
 python -m pytest
+python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
+
+`scripts/profiles.py` runs each form once and reads its KPI profile from the record (Table 2 of
+the paper): the completed and the Pending invocations of the searchers, admission compression,
+ontological compression (the improving moves of every recorded descent step, enumerated after
+the run), the reuse of certified optima by the shakes, and the deferred resolution ratio of the
+searchers and of the incumbent.
 
 The other forms are the same plan with a governed change of the three searchers before phase 3.
 τ_root records the versions of a specification without gaps, so a form records the versions
