@@ -1,0 +1,5 @@
+{
+  "note": "[τ] a potential for the round after the city's 1-tree that moves in the direction of the city's coordinate of the subgradient (up above degree 2, down at degree 1, unchanged at 2); how far is strategy, since every potential gives a valid bound (D2)",
+  "inputs": {"context": ["me", "tree"], "candidate": {"name": "w", "type": "City"}},
+  "body": {"result": "city_admissible(I, me, tree, w)"}
+}

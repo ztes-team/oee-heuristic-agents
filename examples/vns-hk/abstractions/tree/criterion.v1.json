@@ -1,0 +1,5 @@
+{
+  "note": "[τ] a 1-tree of the next round that spans the cities, is minimum under the recorded potentials, and states its bound truly; any minimum 1-tree, not only Prim's (D2)",
+  "inputs": {"context": ["previous_tree", "pis"], "candidate": {"name": "w", "type": "Tree"}},
+  "body": {"result": "tree_admissible(D, N, SC, previous_tree, pis, w)"}
+}

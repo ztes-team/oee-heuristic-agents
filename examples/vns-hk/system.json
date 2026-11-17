@@ -1,0 +1,87 @@
+{
+  "system": "vns-hk",
+  "title": "Cooperating VNS searchers and 26 city abstractions on fri26: the cities compute a Held–Karp lower bound by their potentials and prove the incumbent optimal",
+  "abstractions": ["draw", "search_1", "search_2", "search_3", "incumbent", "city_0", "city_1", "city_2", "city_3", "city_4", "city_5", "city_6", "city_7", "city_8", "city_9", "city_10", "city_11", "city_12", "city_13", "city_14", "city_15", "city_16", "city_17", "city_18", "city_19", "city_20", "city_21", "city_22", "city_23", "city_24", "city_25", "tree", "proof"],
+  "kpi": "kpi",
+  "sources": {
+    "draw": {"random": {"seed": 7, "size": 3, "below": 299}}
+  },
+  "types": {
+    "Draw": {"list": "integer"},
+    "Step": {"record": {"i": "integer", "r": "integer", "k": "integer", "kind": "text", "src": {"list": "integer"}, "src_length": "integer", "m": "integer", "walk": {"list": "integer"}, "length": "integer"}},
+    "Best": {"record": {"r": "integer", "src": {"list": "integer"}, "walk": {"list": "integer"}, "length": "integer", "improved": "boolean"}},
+    "Kpi": {"record": {"profile": "integer", "rounds": "integer", "best": "integer", "found_by": {"list": "integer"}, "optimum": "integer", "bound_rounds": "integer", "bound": "integer", "bound_ceiling": "integer", "proved_at": "integer", "proved_in_round": "integer", "invocations": {"list": "integer"}, "admitted": {"list": "integer"}, "pending": {"list": "integer"}}},
+    "City": {"record": {"i": "integer", "t": "integer", "pi": "integer"}},
+    "Tree": {"record": {"t": "integer", "edges": {"list": {"list": "integer"}}, "bound": "integer"}},
+    "Proof": {"record": {"t": "integer", "r": "integer", "bound": "integer", "length": "integer"}}
+  },
+  "constants": {
+    "LOWER": [
+      [0],
+      [83, 0],
+      [93, 40, 0],
+      [129, 53, 42, 0],
+      [133, 62, 42, 11, 0],
+      [139, 64, 49, 11, 9, 0],
+      [151, 91, 59, 46, 35, 39, 0],
+      [169, 116, 81, 72, 61, 65, 26, 0],
+      [135, 93, 54, 65, 55, 63, 34, 37, 0],
+      [114, 84, 44, 70, 62, 71, 52, 59, 22, 0],
+      [110, 95, 58, 88, 82, 90, 71, 75, 39, 20, 0],
+      [98, 98, 64, 100, 95, 103, 88, 92, 56, 36, 18, 0],
+      [99, 89, 54, 89, 84, 92, 77, 83, 47, 26, 11, 11, 0],
+      [95, 68, 31, 66, 62, 71, 63, 76, 40, 20, 27, 34, 23, 0],
+      [81, 67, 36, 76, 74, 82, 78, 91, 55, 34, 32, 31, 24, 15, 0],
+      [152, 127, 86, 102, 93, 100, 66, 54, 37, 43, 42, 56, 53, 62, 73, 0],
+      [159, 156, 117, 142, 133, 141, 110, 98, 78, 74, 61, 63, 68, 87, 92, 44, 0],
+      [181, 175, 135, 156, 146, 153, 119, 103, 91, 91, 80, 85, 89, 106, 112, 54, 22, 0],
+      [172, 152, 112, 127, 117, 124, 88, 70, 62, 68, 64, 75, 74, 87, 96, 26, 34, 33, 0],
+      [185, 165, 125, 139, 128, 135, 98, 78, 74, 82, 77, 87, 87, 100, 109, 39, 38, 29, 13, 0],
+      [147, 160, 124, 155, 148, 156, 130, 122, 96, 86, 68, 62, 71, 93, 93, 68, 30, 46, 63, 68, 0],
+      [157, 180, 147, 180, 173, 181, 156, 148, 122, 111, 92, 83, 93, 116, 113, 94, 53, 64, 87, 90, 26, 0],
+      [185, 223, 193, 228, 222, 230, 206, 198, 172, 160, 140, 129, 140, 163, 158, 144, 102, 107, 135, 136, 77, 50, 0],
+      [220, 268, 241, 278, 272, 280, 257, 250, 223, 210, 190, 178, 189, 212, 205, 196, 154, 157, 186, 186, 128, 102, 51, 0],
+      [127, 179, 157, 197, 194, 202, 188, 188, 155, 136, 116, 100, 111, 132, 122, 139, 109, 125, 141, 148, 80, 65, 64, 93, 0],
+      [181, 197, 161, 190, 182, 190, 160, 148, 128, 121, 103, 99, 107, 130, 130, 95, 51, 51, 81, 79, 37, 27, 58, 107, 90, 0]
+    ],
+    "N": 26,
+    "S": 3,
+    "R": 10,
+    "KMAX": 3,
+    "START": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+    "OPT": 937,
+    "SC": 100,
+    "PATIENCE": 30,
+    "HMAX": 12,
+    "TMAX": 1000
+  },
+  "derived": {
+    "D": "full(LOWER, N)",
+    "MOVES": "two_opt_moves(N)",
+    "TLEN": "tour_length(D, START)"
+  },
+  "bindings": {
+    "draws": {"from": "draw", "select": "count", "note": "draws already admitted"},
+    "rolls": {"from": "draw", "select": "all", "type": "Draw", "note": "the recorded draws; searcher I uses draw r·S + I − 1 in round r"},
+    "prev": {"from": "$self", "select": "last", "type": "Step", "default": {"i": 0, "r": -1, "k": 0, "kind": "opt", "src": [0, -1], "src_length": 0, "m": -1, "walk": [], "length": 0}, "note": "the searcher's last step; before round 0 it stands as if a round had been certified"},
+    "inc": {"from": "incumbent", "select": "last", "type": "Best", "default": {"r": -1, "src": [0, -1], "walk": [], "length": 0, "improved": false}, "note": "the incumbent of the last round every searcher has finished"},
+    "before": {"from": "$self", "select": "last", "type": "Best", "default": {"r": -1, "src": [0, -1], "walk": [], "length": 0, "improved": false}},
+    "opts": {"from": ["search_1", "search_2", "search_3"], "select": "all", "type": "Step", "where": "x['kind'] == 'opt'", "note": "the certified local optima of all searchers"},
+    "bests": {"from": "incumbent", "select": "all", "type": "Best"},
+    "me": {"from": "$self", "select": "last", "type": "City", "default": {"i": -1, "t": 0, "pi": 0}, "note": "the city's last potential; before its first, potential 0 in round 0"},
+    "tree": {"from": "tree", "select": "last", "type": "Tree", "default": {"t": -1, "edges": [], "bound": 0}, "note": "the last minimum 1-tree"},
+    "previous_tree": {"from": "$self", "select": "last", "type": "Tree", "default": {"t": -1, "edges": [], "bound": 0}},
+    "bounds": {"from": "tree", "select": "map", "type": "Tree", "key": "x['t']", "value": "x['bound']", "note": "round t → the bound of its 1-tree"},
+    "incs": {"from": "incumbent", "select": "map", "type": "Best", "key": "x['r']", "value": "x['length']", "note": "round r of the searchers → the length of its incumbent"},
+    "pis": {"from": ["city_0", "city_1", "city_2", "city_3", "city_4", "city_5", "city_6", "city_7", "city_8", "city_9", "city_10", "city_11", "city_12", "city_13", "city_14", "city_15", "city_16", "city_17", "city_18", "city_19", "city_20", "city_21", "city_22", "city_23", "city_24", "city_25"], "select": "map", "type": "City", "key": "(x['i'], x['t'])", "value": "x['pi']", "note": "(city, round) → the potential the city recorded for that round"},
+    "proofs": {"from": "proof", "select": "count"},
+    "proof": {"from": "proof", "select": "all", "type": "Proof"}
+  },
+  "plan": [
+    {"phase": 1},
+    {"phase": 2},
+    {"phase": 3, "note": "R rounds of the searchers; in parallel, rounds of the cities, each coupled to the incumbent of round min(t, R − 1), until the bound proves it optimal"},
+    {"kpi": true, "note": "execution indicators, once, at the end"}
+  ],
+  "expect": {"note": "the cities and the searchers wait for complete horizons, so the record is the same under every schedule and expect has no any_schedule part", "events": 934, "states": {"draw": "closed", "search_1": "wait", "search_2": "wait", "search_3": "wait", "incumbent": "wait", "city_0": "wait", "city_1": "wait", "city_2": "wait", "city_3": "wait", "city_4": "wait", "city_5": "wait", "city_6": "wait", "city_7": "wait", "city_8": "wait", "city_9": "wait", "city_10": "wait", "city_11": "wait", "city_12": "wait", "city_13": "wait", "city_14": "wait", "city_15": "wait", "city_16": "wait", "city_17": "wait", "city_18": "wait", "city_19": "wait", "city_20": "wait", "city_21": "wait", "city_22": "wait", "city_23": "wait", "city_24": "wait", "city_25": "wait", "tree": "wait", "proof": "wait"}, "last": {"incumbent": {"r": 9, "src": [3, 4], "length": 937}, "proof": {"t": 18, "r": 9, "bound": 93610, "length": 937}}, "values": {"kpi": [{"profile": 1, "rounds": 10, "best": 937, "found_by": [3, 4], "optimum": 937, "bound_rounds": 19, "bound": 93610, "bound_ceiling": 937, "proved_at": 18, "proved_in_round": 9, "invocations": [441, 898, 38, 116], "admitted": [333, 468, 19, 10], "pending": [108, 430, 19, 106]}]}}
+}

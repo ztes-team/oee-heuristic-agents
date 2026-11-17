@@ -15,6 +15,7 @@ directory, as JSON specifications and one `lib.py` of bounded functions.
 | [`vns`](examples/vns/DESIGN.md) | variable neighborhood search by three cooperating searchers on fri26 (TSPLIB, symmetric, optimum 937) | 5 | 390 | every loop of VNS is interaction; each local optimum is a certificate; the criterion admits any step of VNS (D2); synchronous cooperation gives the same record under every schedule, with no lock, no message and no master process; the asymmetric neighborhood and the certificate relative to the record |
 | [`vns-atsp`](examples/vns-atsp/DESIGN.md) | the same on ftv38 (TSPLIB, asymmetric, optimum 1,530) | 5 | 1,195 | a neighborhood that keeps the direction of every arc it does not cut; nothing in the lifting changes; the asymmetric neighborhood reaches a shorter tour |
 | [`vns-tw`](examples/vns-tw/DESIGN.md) | the same on ftv38 with time windows and precedence constraints, under a recorded environment | 7 | 327 | a late city is False and a premature one Not Yet, and the prefix order gives the repair rule; a chance constraint on recorded scenarios and an audit of the probability of being on time; three sources of chance (algorithm, schedule, environment) in one record |
+| [`vns-hk`](examples/vns-hk/DESIGN.md) | the searchers of `vns` beside 26 city abstractions that compute a Held–Karp lower bound on fri26 | 33 | 934 | heterogeneous agents in one record: the cities are the dual, each moves its own potential, and a minimum 1-tree is admitted in each round; the bound proves the incumbent optimal, a claim about every tour made one admitted event; aimed at the incumbent the cities need 18 rounds, aimed at the starting tour 330 |
 
 ## vns: variable neighborhood search by cooperating searchers
 
@@ -68,6 +69,19 @@ runs, v1 in 1. The algorithm, the schedule of the workers and the environment ar
 chance in one record: for the synchronous forms the share of the schedule is exactly 0, for the
 asynchronous form it is measured. See [`examples/vns-tw/DESIGN.md`](examples/vns-tw/DESIGN.md).
 
+## vns-hk: the cities prove the incumbent optimal
+
+The searchers of `vns` keep their tours; beside them, every city of fri26 is an abstraction with a
+potential. In each round an abstraction `tree` records the minimum 1-tree under the potentials,
+and its weight minus twice their sum is a lower bound on every tour. Each city then moves its own
+potential, up if its degree in the tree was above 2, down if it was a leaf, by a step aimed at the
+incumbent of the searchers. The criterion of a city admits any move in that direction, since every
+potential gives a valid bound; that of the tree admits any minimum 1-tree. In round 18 the bound is
+936.10, and the abstraction `proof` records that no tour is shorter than the incumbent, 937. Every
+horizon is complete before it is read, so the 33 workers give the same history of every lineage
+under every schedule. Aimed at the starting tour instead (ontology v2 of the cities, the same
+criteria), the bound needs 330 rounds. See [`examples/vns-hk/DESIGN.md`](examples/vns-hk/DESIGN.md).
+
 ## Running
 
 Python 3.12 or later.
@@ -79,6 +93,7 @@ python -m ztes run examples/vns --workers     # phase 3 by one worker per abstra
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
 python -m ztes run examples/vns-atsp
 python -m ztes run examples/vns-tw         # about 15 s, and as long for R2
+python -m ztes run examples/vns-hk
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
@@ -112,7 +127,7 @@ workers.run(System("examples/vns"), MemoryStore(), plan=asynchronous)         # 
 
 ## Tests
 
-`tests/test_vns.py`, `tests/test_vns_atsp.py` and `tests/test_vns_tw.py` apply to the examples the checks ZTES applies to
+`tests/test_vns.py`, `tests/test_vns_atsp.py`, `tests/test_vns_tw.py` and `tests/test_vns_hk.py` apply to the examples the checks ZTES applies to
 each of its own, and check what the `DESIGN.md` files claim.
 
 | Test | What it checks |
@@ -145,6 +160,13 @@ each of its own, and check what the `DESIGN.md` files claim.
 | `test_the_asymmetric_neighborhood_returns_less` (vns-tw) | v3 has the criteria of v1, 17 returns instead of 26, and reaches 3,504 in round 3 instead of 6 |
 | `test_without_the_chance_constraint_the_search_is_blind_to_the_environment` (vns-tw) | ALLOW = M: v1 and v3 both end at 3,482, on time in 672 and in 430 of the audit scenarios |
 | `test_the_synchronous_form_gives_the_same_histories_by_workers`, `test_the_asynchronous_form_is_verifiable_by_workers` (vns-tw) | by workers: the synchronous form gives the histories of the agenda; the asynchronous one replays and its incumbent never gets worse |
+| `test_the_generator_reproduces_the_cities` (vns-hk) | `generate.py` gives the 26 city abstractions and `system.json` |
+| `test_the_same_histories_under_random_schedules_and_killed_workers` (vns-hk) | 33 workers, under random schedules and with workers killed: the histories of the agenda |
+| `test_every_tree_is_a_minimum_one_tree_and_states_its_bound_truly` (vns-hk) | every recorded 1-tree is minimum under the recorded potentials (Kruskal, in the test) and its bound is its weight minus 2·Σπ |
+| `test_every_bound_is_below_every_recorded_tour_and_the_proof_is_true` (vns-hk) | weak duality on every recorded tour; the proof (round 18, 936.10, 937) is true and no earlier round proves it |
+| `test_every_potential_moves_in_the_direction_of_the_subgradient` (vns-hk) | up above degree 2, down at degree 1, unchanged at 2 |
+| `test_the_criteria_know_nothing_of_the_strategy` (vns-hk) | D2: a longer step in the same direction is admitted, one against it refused; a 1-tree that is not minimum, a false bound, a proof of 938 or from round 17 are refused |
+| `test_aiming_at_the_starting_tour_takes_eighteen_times_as_many_rounds` (vns-hk) | ontology v2 of the cities, the same criteria: the proof in round 330 instead of 18 |
 
 ## License
 

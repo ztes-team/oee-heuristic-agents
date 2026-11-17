@@ -1,0 +1,6 @@
+{
+  "note": "[ω] v2: the same step, aimed at the length of the starting tour instead of the incumbent; the incumbent still decides when the bound has proved it optimal",
+  "inputs": {"context": ["me", "tree", "bounds", "incs"]},
+  "returns": "City",
+  "body": {"result": "city_step(I, N, R, SC, PATIENCE, HMAX, TMAX, me, tree, bounds, incs, TLEN)"}
+}

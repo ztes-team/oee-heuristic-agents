@@ -1,0 +1,5 @@
+{
+  "note": "[τ] once: the best recorded bound up to the round proves the length of the incumbent of the coupled round; an upper set of the prefix order",
+  "inputs": {"context": ["bounds", "incs", "proofs"], "candidate": {"name": "w", "type": "Proof"}},
+  "body": {"result": "proof_admissible(R, SC, bounds, incs, proofs, w)"}
+}

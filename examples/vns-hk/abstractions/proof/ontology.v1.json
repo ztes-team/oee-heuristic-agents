@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the first round of the cities whose best bound proves the incumbent of the coupled round optimal; ⊥ until one does",
+  "inputs": {"context": ["bounds", "incs", "proofs"]},
+  "returns": "Proof",
+  "body": {"result": "proof_step(R, SC, bounds, incs, proofs)"}
+}

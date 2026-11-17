@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the city's potential for the next round: a step of subgradient ascent of the Held–Karp bound, aimed at the incumbent of the coupled round; ⊥ while its 1-tree or that incumbent is missing, and once the bound proves the incumbent optimal",
+  "inputs": {"context": ["me", "tree", "bounds", "incs"]},
+  "returns": "City",
+  "body": {"result": "city_step(I, N, R, SC, PATIENCE, HMAX, TMAX, me, tree, bounds, incs, None)"}
+}

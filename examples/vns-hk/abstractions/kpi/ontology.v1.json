@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the indicators of the system, computed on demand over the record",
+  "inputs": {"context": ["bests", "bounds", "proof", "profile", "profiles", "kpis"]},
+  "returns": "Kpi",
+  "body": {"result": "None if profiles == 0 or kpis >= profiles or not bests else measure(SC, OPT, bests, bounds, proof, profile, profiles)"}
+}

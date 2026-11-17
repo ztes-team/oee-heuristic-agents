@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the minimum 1-tree of the next round under the potentials the cities recorded for it, and its bound; ⊥ while a city has not recorded its potential",
+  "inputs": {"context": ["previous_tree", "pis"]},
+  "returns": "Tree",
+  "body": {"result": "tree_step(D, N, SC, previous_tree, pis)"}
+}
