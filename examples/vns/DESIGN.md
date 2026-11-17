@@ -2,7 +2,7 @@
 
 *Not in the paper on the calculus of execution (a candidate for the paper on heuristic agents). Tags: [C] epistemic, [ω] ontological, [τ] eschatological (see the [README of the examples of ZTES](https://github.com/ztes-team/ztes-minimal/blob/main/examples/README.md)).*
 
-**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/main/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and the synchronous one gives the same record under every schedule, with no lock, no message and no master process.
+**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/main/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and the synchronous one gives the same record under every schedule, with no lock, no message and no master process. A third form adapts VNS to the asymmetric space of execution: the neighborhood of a tour is resolved against the record, so the descent does not take the way back to a tour the record already holds; the criterion stays the same. A fourth form adds a certificate relative to the record, admitted by a widened criterion.
 
 VNS (Mladenović and Hansen 1997; Hansen and Mladenović 2001) alternates a random perturbation of
 the current solution in the k-th neighborhood (the shake) with a local descent, and returns to the
@@ -48,7 +48,10 @@ fixed order resolves the relation to one candidate without a choice function (D1
 | `kpi` | the indicators of the search (section 8) | each indicator equal to its definition | the searchers, `incumbent`, `profile` |
 
 The three searchers are the same specification files; `abstraction.json` gives each its number I,
-and the logic is written once, in `lib.py`. Searcher I uses draw r·S + I − 1 in round r.
+and the logic is written once, in `lib.py`. Searcher I uses draw r·S + I − 1 in round r. The table
+describes ontology v1 and criterion v1, the plan of the example. The other versions of a searcher
+are the forms of section 4: ontology v2 (asynchronous), v3 (asymmetric neighborhood), v4 (strict
+asymmetric neighborhood, bound to criterion v2, which also admits a certificate relative to the record).
 
 An event of a searcher records the round r, the neighborhood k, the kind of step (shake, move,
 opt), the certified tour the round started from (`src`, as searcher and round, and its length),
@@ -114,10 +117,69 @@ choice decides is not the quality but whether the result depends on the schedule
 N₃ by draw 14 (event 160), 30 moves, certificate 937 (event 220). With a kept record,
 `python -m ztes explain DIR 220` shows why the last step was admitted.
 
+**The asymmetric neighborhood (ontology v3).** VNS defines its neighborhoods on the space of
+solutions, and the 2-opt neighborhood is symmetric: a move is its own inverse, so y ∈ N_k(x)
+exactly when x ∈ N_k(y). The record shows what this costs. A shake in N₁ moves a local optimum by
+one 2-opt move; the inverse of that move is an improving move of the shaken tour whenever the shake
+lengthened it, first improvement often takes it, and the round ends by certifying the very tour it
+shook. With seed 7 this happens
+in 14 of the 30 rounds (the indicator `returns`), and 16 of the 30 certificates repeat an earlier one.
+
+The space of execution is asymmetric: a prefix is extended and never retracted, and its Alexandrov
+neighborhoods ↑C point only forward. Ontology v3 carries this into the search. The neighborhood of a
+tour is resolved against the record (D1): the descent takes the first improving move to a tour the
+finished rounds have not recorded, and the first improving move only when every improving one leads
+to a recorded tour. As the record grows the neighborhood can only shrink,
+C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C). It reads only rounds that are finished when its round begins, a
+complete horizon, so the synchronous form keeps the same record under every schedule. The
+criterion is that of v1, which admits any improving move: the new form is a change of ontology alone (D2).
+
+With seed 7 the asymmetric form finds 974 in round 3 and reaches 937 in round 4, as v1 does, with
+11 returns instead of 14. Over seeds 1–40 it reaches the optimum in 28 runs, v1 in 22; it ends
+shorter than v1 in 9 seeds, longer in 1, and equal in 30, with 325 moves per run on average against
+299: the gain does not come from more work but from not going back.
+
+**The relative certificate (ontology v4, criterion v2).** v3 cannot always avoid the way back. When
+every improving move of a tour leads to a recorded tour, criterion v1 still demands a descent to a
+tour that no move shortens, and the searcher walks into known ground. Criterion v2 admits every step
+v1 admits and, in addition, a certificate relative to the record: no move shortens the tour to a tour
+the rounds before its own have not recorded. Once this holds on a prefix it holds on every extension:
+the prefixes on which it holds form an upper set, open in the Alexandrov topology (Proposition 5(b)
+of the paper). Since v1 admits a subset of what v2 admits, this governed change widens admission.
+Ontology v4 is the strict descent bound to criterion v2: it never enters a recorded tour and
+certifies relative to the record when nothing else is left.
+
+With seed 7 the strict form has no return, 12 relative certificates and 255 moves instead of 273;
+its incumbent goes as under v3. Over seeds 1–40 it has 2 returns in all, against 15.2 per run under
+v1 and 12.8 under v3, and neither came from a descent: in both the draw repeated a move index, the
+two equal 2-opt moves of a shake in N₂ cancelled, and the shake itself landed on the tour it shook.
+The strict form reaches the optimum in 27 runs, and it ends shorter than v1 in 9 seeds and longer
+in 2. Its quality is that of v3; what it changes is that the record no longer states the same thing
+twice.
+
+| Form | Ontology | Criterion | Seed 7: incumbent | returns | relative | moves | Seeds 1–40: optimum |
+|---|---|---|---|---|---|---|---|
+| synchronous (plan) | v1 | v1 | 1,004, 985, 937 | 14 | 0 | 273 | 22 |
+| asynchronous | v2 | v1 | 1,004, 953, 937 | 19 | 0 | 280 | 22 |
+| asymmetric | v3 | v1 | 1,004, 985, 974, 937 | 11 | 0 | 271 | 28 |
+| asymmetric, strict | v4 | v2 | 1,004, 985, 974, 937 | 0 | 12 | 255 | 27 |
+
 ## 5. Plan
 
-Phases 1 and 2; phase 3 until terminal; one KPI step. The asynchronous form is the same plan with a
-governed change of the three searcher ontologies before phase 3:
+Phases 1 and 2; phase 3 until terminal; one KPI step. Every other form is the same plan with a
+governed change of the three searchers before phase 3. τ_root records the versions of a
+specification without gaps, so a plan that runs version v records the versions before it in the
+same governed change: they are active for no invocation, and the record carries the lineage of the
+searchers' ontology. An ontology is bound to the criterion active when it is recorded, so
+criterion v2 is recorded before ontology v4.
+
+```
+asynchronous         govern search_i/ontology.v2
+asymmetric           govern search_i/ontology.v2, search_i/ontology.v3
+asymmetric, strict   govern search_i/ontology.v2, search_i/ontology.v3, search_i/criterion.v2, search_i/ontology.v4
+```
+
+for i = 1, 2, 3. The asynchronous form, for example:
 
 ```json
 [{"phase": 1}, {"phase": 2},
@@ -139,15 +201,20 @@ one searcher improves the incumbent. The asynchronous form run by workers with s
 of 370 to 432 events in our runs, all ending at 937; that end is not guaranteed. The synchronous
 form, run by workers under 40 random schedules and in 20 runs with 3,155 workers killed and started
 again, gave in every run the 390 events of the agenda and the same history of every lineage.
+The asymmetric form (v3) and the strict form with criterion v2 (v4), each run by workers under 20
+random schedules and in 10 runs with 1,617 and 1,517 workers killed, gave in every run the history of
+every lineage that they give under the agenda, and every record replayed.
 
 ## 7. Files
 
 ```
 system.json                      instance (LOWER, N, OPT), S, R, KMAX, START, the source of draw, bindings, plan, expect
 lib.py                           the 2-opt neighborhood, the change of length of a move, first improvement, the shake,
-                                 the step of a searcher, its criterion, the incumbent of a round, the indicators
+                                 the step of a searcher, the asymmetric neighborhood, the criteria, the incumbent of a
+                                 round, the indicators
 abstractions/draw/               [ω] boundary   [τ] a well-formed draw within the budget
-abstractions/search_1/ … _3/     abstraction.json (I); [ω] v1 synchronous, v2 asynchronous   [τ] a step of VNS
+abstractions/search_1/ … _3/     abstraction.json (I); [ω] v1 synchronous, v2 asynchronous, v3 asymmetric,
+                                 v4 asymmetric strict   [τ] v1 a step of VNS, v2 also a certificate relative to the record
 abstractions/incumbent/          [ω] the best after a round, once all searchers finished it   [τ] equal to its definition
 abstractions/kpi/                [ω] indicators   [τ] each equal to its definition
 ```
@@ -155,13 +222,16 @@ abstractions/kpi/                [ω] indicators   [τ] each equal to its defini
 ## 8. Execution indicators (KPI)
 
 ```
-rounds 10, moves 273, optima 30, shakes_by_k [12, 9, 6], better_by_k [1, 0, 1],
+rounds 10, moves 273, returns 14, relative 0, optima 30, shakes_by_k [12, 9, 6], better_by_k [1, 0, 1],
 best 937, found_by [3, 4], optimum 937, gap_permille 0, search_invocations 441, search_not_yet 108
 ```
 
 `shakes_by_k` and `better_by_k` give, for each neighborhood, the shakes made in it after round 0
 and the local optima reached from them that are shorter than the tour shaken: the statistics by
-which VNS variants are compared, read from the record with no instrumentation. The profile shows
+which VNS variants are compared, read from the record with no instrumentation. `returns` counts the
+certificates of the very tour their round shook (the descent went back), and `relative` the
+certificates relative to the record, whose tour some move still shortens; both are read from the
+record and compare the forms of section 4 directly. The profile shows
 the cost of synchronization: the searchers are at Not Yet 108 times, waiting for the incumbent of a
 round or, at the end, after round R, and `incumbent` 106 times, waiting for the last searcher of a
 round.

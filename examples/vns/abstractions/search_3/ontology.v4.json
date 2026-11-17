@@ -1,0 +1,15 @@
+{
+  "note": "[ω] the asymmetric neighborhood, strict: the descent never enters a tour recorded in the finished rounds; when every improving move leads to one, it certifies the tour relative to the record (criterion v2)",
+  "inputs": {
+    "context": [
+      "prev",
+      "rolls",
+      "inc",
+      "steps"
+    ]
+  },
+  "returns": "Step",
+  "body": {
+    "result": "vns_step_asym(I, S, R, KMAX, D, MOVES, prev, rolls, source_sync(START, D, prev, inc), steps, True)"
+  }
+}

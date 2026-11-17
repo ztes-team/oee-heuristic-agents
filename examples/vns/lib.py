@@ -110,6 +110,64 @@ def vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source):
             "src_length": prev["src_length"], "m": m, "walk": walk, "length": tour_length(D, walk)}
 
 
+# ---- the asymmetric neighborhood: the neighbors of a tour are resolved against the record ----
+
+def same_tour(a, b):
+    """Two walks are one tour of the symmetric problem: equal, or one read backwards from the first city."""
+    n = len(a)
+    return len(b) == n and (all(a[c] == b[c] for c in range(n)) or all(a[c] == b[(n - c) % n] for c in range(n)))
+
+
+def among(walks, walk):
+    """Whether the tour is one of the given walks."""
+    for w in walks:
+        if same_tour(w, walk):
+            return True
+    return False
+
+
+def recorded(steps, r):
+    """[C] The tours the searchers recorded in the rounds before r, grouped by length. When round r
+    begins those rounds are finished, so this is the same under every schedule (a complete horizon)."""
+    out = {}
+    for x in steps:
+        if x["r"] < r:
+            if x["length"] in out:
+                out[x["length"]].append(x["walk"])
+            else:
+                out[x["length"]] = [x["walk"]]
+    return out
+
+
+def first_improving_new(D, MOVES, walk, known):
+    """The first move, in the fixed order, that shortens the tour to a tour not among the recorded
+    ones (`known`); -1 if there is none. The neighborhood of a tour is thus resolved against the
+    record: as the record grows it can only shrink (C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C)), and the way
+    back to a recorded tour, which the inverse of the shake always offers, is not taken."""
+    length = tour_length(D, walk)
+    for m in range(len(MOVES)):
+        d = change(D, MOVES, walk, m)
+        if d < 0 and (length + d not in known or not among(known[length + d], reverse(MOVES, walk, m))):
+            return m
+    return -1
+
+
+def vns_step_asym(I, S, R, KMAX, D, MOVES, prev, rolls, source, steps, strict):
+    """[ω] The next step of searcher I in the asymmetric neighborhood. The shake is that of vns_step.
+    The descent takes the first improving move to a tour not recorded in the finished rounds. If
+    every improving move leads to a recorded tour, v3 (strict false) takes the first of them, since
+    criterion v1 certifies only a tour that no move shortens; v4 (strict true) certifies the tour
+    relative to the record, which criterion v2 admits."""
+    if prev["kind"] == "opt":
+        return vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source)
+    m = first_improving_new(D, MOVES, prev["walk"], recorded(steps, prev["r"]))
+    if m < 0 and not strict:
+        m = first_improving(D, MOVES, prev["walk"])
+    walk = prev["walk"] if m < 0 else reverse(MOVES, prev["walk"], m)
+    return {"i": I, "r": prev["r"], "k": prev["k"], "kind": "opt" if m < 0 else "move", "src": prev["src"],
+            "src_length": prev["src_length"], "m": m, "walk": walk, "length": tour_length(D, walk)}
+
+
 def admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w):
     """[τ] A step of searcher I is admitted if it is a legitimate step of VNS from the previous one,
     whatever strategy chose it: a shake of the starting tour or of a certified local optimum,
@@ -138,6 +196,19 @@ def admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w):
             and all(change(D, MOVES, w["walk"], m) >= 0 for m in range(len(MOVES))))
 
 
+def admissible_relative(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, steps, w):
+    """[τ] Criterion v2: every step criterion v1 admits, and the certificate of a tour relative to the
+    record: no move shortens it to a tour that the rounds before its own have not recorded. Once it
+    holds it holds in every extension of the record (an upper set of the prefix order). Criterion v1
+    admits a subset of what v2 admits: the change of criterion widens admission."""
+    if admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w):
+        return True
+    same = ["r", "k", "src", "src_length", "walk", "length"]
+    return (w["i"] == I and w["kind"] == "opt" and w["m"] == -1 and prev["kind"] != "opt"
+            and all(w[f] == prev[f] for f in same)
+            and first_improving_new(D, MOVES, w["walk"], recorded(steps, w["r"])) < 0)
+
+
 def round_best(S, START, D, r, before, opts):
     """The incumbent after round r: the shortest of the previous incumbent and the S local optima of
     round r (among equals the earlier, then the searcher with the smaller number); None until
@@ -155,28 +226,42 @@ def round_best(S, START, D, r, before, opts):
     return out
 
 
-def measure(KMAX, OPT, steps, bests, profile, profiles):
+def measure(KMAX, OPT, START, D, MOVES, steps, bests, profile, profiles):
     """The indicators of the search (KPI abstraction), all read from the record.
 
     shakes_by_k and better_by_k count, for each neighborhood N_k, the shakes made in it and the
     local optima reached from them that are shorter than the tour shaken; round 0, which shakes
-    the starting tour, is initialization and is not counted."""
+    the starting tour, is initialization and is not counted. returns counts the certificates of
+    the very tour their round shook: the descent went back. relative counts the certificates
+    relative to the record (criterion v2), whose tour some move still shortens."""
     shakes_by_k = [0 for k in range(KMAX)]
     better_by_k = [0 for k in range(KMAX)]
     moves = 0
     optima = 0
+    certified = {}
     for x in steps:
         if x["kind"] == "move":
             moves += 1
         elif x["kind"] == "opt":
             optima += 1
+            certified[(x["i"], x["r"])] = x["walk"]
         if x["r"] > 0 and x["kind"] == "shake":
             shakes_by_k[x["k"] - 1] += 1
         if x["r"] > 0 and x["kind"] == "opt" and x["length"] < x["src_length"]:
             better_by_k[x["k"] - 1] += 1
+    returns = 0
+    relative = 0
+    for x in steps:
+        if x["kind"] == "opt":
+            source = START if x["src"] == [0, -1] else certified[(x["src"][0], x["src"][1])]
+            if same_tour(x["walk"], source):
+                returns += 1
+            if first_improving(D, MOVES, x["walk"]) >= 0:
+                relative += 1
     last = bests[-1]
     searchers = [x for x in profile if x["abstraction"].startswith("search_")]
-    return {"profile": profiles, "rounds": len(bests), "moves": moves, "optima": optima,
+    return {"profile": profiles, "rounds": len(bests), "moves": moves, "optima": optima, "returns": returns,
+            "relative": relative,
             "shakes_by_k": shakes_by_k, "better_by_k": better_by_k, "best": last["length"], "found_by": last["src"],
             "optimum": OPT, "gap_permille": (last["length"] - OPT) * 1000 // OPT,
             "search_invocations": sum(x["I"] for x in searchers), "search_not_yet": sum(x["U"] for x in searchers)}

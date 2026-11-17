@@ -1,0 +1,5 @@
+{
+  "note": "[τ] the indicators of the latest profile, each equal to its definition in measure()",
+  "inputs": {"context": ["steps", "bests", "profile", "profiles", "kpis"], "candidate": {"name": "w", "type": "Kpi"}},
+  "body": {"result": "profiles > kpis and len(bests) > 0 and w == measure(KMAX, OPT, START, steps, bests, profile, profiles)"}
+}

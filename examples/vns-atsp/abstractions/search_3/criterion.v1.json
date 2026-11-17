@@ -1,0 +1,5 @@
+{
+  "note": "[τ] a legitimate VNS step from the previous one, whatever strategy chose it: a shake of a certified tour within N_k, an improving segment exchange, or a certificate that none exists",
+  "inputs": {"context": ["prev", "rolls", "opts"], "candidate": {"name": "w", "type": "Step"}},
+  "body": {"result": "admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w)"}
+}

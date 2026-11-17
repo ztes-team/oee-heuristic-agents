@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the indicators of the search, computed on demand over the record",
+  "inputs": {"context": ["steps", "bests", "profile", "profiles", "kpis"]},
+  "returns": "Kpi",
+  "body": {"result": "None if profiles == 0 or kpis >= profiles or not bests else measure(KMAX, OPT, START, steps, bests, profile, profiles)"}
+}

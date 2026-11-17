@@ -25,19 +25,42 @@ from ztes.system.report import check_expect
 from ztes.system.system import System
 
 VNS = Path(__file__).parent.parent / "examples" / "vns"
-ASYNC = [{"phase": 1}, {"phase": 2}, {"govern": [f"search_{i}/ontology.v2" for i in (1, 2, 3)]},
-         {"phase": 3}, {"kpi": True}]
+
+
+def form(*keys):
+    """The plan of the example with a governed change of the three searchers before phase 3."""
+    govern = [f"search_{i}/{key}" for key in keys for i in (1, 2, 3)]
+    return [{"phase": 1}, {"phase": 2}, {"govern": govern}, {"phase": 3}, {"kpi": True}]
+
+
+ASYNC = form("ontology.v2")                                           # asynchronous cooperation
+ASYM = form("ontology.v2", "ontology.v3")                             # the asymmetric neighborhood
+STRICT = form("ontology.v2", "ontology.v3", "criterion.v2", "ontology.v4")   # with the relative certificate
 STORES = {"memory": lambda tmp: MemoryStore(), "disk": lambda tmp: DiskStore(tmp),
           "redis": lambda tmp: RedisStore(client=fakeredis.FakeRedis(), batch=5)}
 quiet = lambda *_: None
 
 
+def by_agenda(plan=None):
+    system, store = System(VNS), MemoryStore()
+    system.run(store, log=quiet, plan=plan)
+    return system, list(read(store))
+
+
 @pytest.fixture(scope="module")
 def central():
     """The system and its record under the agenda: one Z₀, the order of the plan."""
-    system, store = System(VNS), MemoryStore()
-    system.run(store, log=quiet)
-    return system, list(read(store))
+    return by_agenda()
+
+
+@pytest.fixture(scope="module")
+def asym():
+    return by_agenda(ASYM)
+
+
+@pytest.fixture(scope="module")
+def strict():
+    return by_agenda(STRICT)
 
 
 def values(C, a):
@@ -214,22 +237,26 @@ def test_criterion_admits_any_step_of_vns_and_refuses_the_rest(central):
     assert not evaluation.judge(P, tau, dict(shake, k=4))                   # beyond the last neighborhood
 
 
+def _bodies(C, role):
+    """The body of the specification by which each searcher's events were judged (criterion) or proposed (ontology)."""
+    return {e["coord"]["abstraction"]: str(lookups.load(C, e["coord"][role])["body"])
+            for e in C if e["coord"]["kind"] == "exec" and e["coord"]["abstraction"].startswith("search_")}
+
+
+def _chain(C):
+    return [(b["r"], b["src"], b["length"]) for b in values(C, "incumbent") if b["improved"]]
+
+
 def test_asynchronous_cooperation_changes_three_ontologies_and_no_criterion(central):
     """The two classical forms of cooperation are one horizon apart: the criteria are the same."""
     sync = central[1]
-    store = MemoryStore()
-    System(VNS).run(store, log=quiet, plan=ASYNC)
-    asyn = list(read(store))
+    _, asyn = by_agenda(ASYNC)
     assert verify(asyn) == []
-    specs = lambda C, role: {e["coord"]["abstraction"]: str(lookups.load(C, e["coord"][role])["body"])
-                             for e in C if e["coord"]["kind"] == "exec"
-                             and e["coord"]["abstraction"].startswith("search_")}
-    assert specs(sync, "criterion") == specs(asyn, "criterion")
-    assert all("source_sync" in b for b in specs(sync, "ontology").values())
-    assert all("source_async" in b for b in specs(asyn, "ontology").values())
-    chain = lambda C: [(b["r"], b["src"], b["length"]) for b in values(C, "incumbent") if b["improved"]]
-    assert chain(sync) == [(0, [1, 0], 1004), (1, [1, 1], 985), (4, [3, 4], 937)]
-    assert chain(asyn) == [(0, [1, 0], 1004), (1, [3, 1], 953), (4, [3, 4], 937)]  # 953 already in round 1
+    assert _bodies(sync, "criterion") == _bodies(asyn, "criterion")
+    assert all("source_sync" in b for b in _bodies(sync, "ontology").values())
+    assert all("source_async" in b for b in _bodies(asyn, "ontology").values())
+    assert _chain(sync) == [(0, [1, 0], 1004), (1, [1, 1], 985), (4, [3, 4], 937)]
+    assert _chain(asyn) == [(0, [1, 0], 1004), (1, [3, 1], 953), (4, [3, 4], 937)]  # 953 already in round 1
 
 
 def test_synchronous_cooperation_gives_the_same_histories_under_every_schedule(central):
@@ -272,3 +299,100 @@ def test_asynchronous_cooperation_is_verifiable_under_every_schedule():
         assert verify(list(C)) == []
         lengths = [b["length"] for b in values(C, "incumbent")]
         assert len(lengths) == 10 and lengths == sorted(lengths, reverse=True)
+
+
+# ---- the asymmetric neighborhood (ontology v3) and the relative certificate (ontology v4, criterion v2) ----
+
+def _cycle(walk):
+    """A tour of the symmetric problem as one key: the walk or the walk read backwards, whichever is smaller."""
+    return min(tuple(walk), (walk[0],) + tuple(walk[:0:-1]))
+
+
+def _recorded_before(C, r):
+    """The tours the searchers recorded in the rounds before r (written here independently of lib.py)."""
+    return {_cycle(x["walk"]) for i in (1, 2, 3) for x in values(C, f"search_{i}") if x["r"] < r}
+
+
+def _returns(C, start):
+    """The certificates of the very tour their round shook, counted independently of lib.py."""
+    opts = [x for i in (1, 2, 3) for x in values(C, f"search_{i}") if x["kind"] == "opt"]
+    walk = {(x["i"], x["r"]): x["walk"] for x in opts}
+    return sum(_cycle(x["walk"]) == _cycle(start if x["src"] == [0, -1] else walk[tuple(x["src"])]) for x in opts)
+
+
+def test_the_symmetric_neighborhood_goes_back_and_the_asymmetric_one_less(central, asym):
+    """The inverse of a shake is an improving move of the shaken tour. v1 often takes it and certifies
+    the tour it shook; v3 takes it only when every improving move leads to a recorded tour."""
+    start = _fri26()[1]["START"]
+    assert _returns(central[1], start) == values(central[1], "kpi")[-1]["returns"] == 14
+    assert _returns(asym[1], start) == values(asym[1], "kpi")[-1]["returns"] == 11
+
+
+def test_the_asymmetric_descent_avoids_the_recorded_tours(asym):
+    """Every step of the descent under ontology v3 is the first improving move to a tour the finished
+    rounds have not recorded, the first improving move if there is none, or the certificate if no
+    move improves (checked here independently of lib.py)."""
+    C = asym[1]
+    D, _ = _fri26()
+    length = lambda w: sum(D[w[i - 1]][w[i]] for i in range(len(w)))
+    known = {r: _recorded_before(C, r) for r in range(10)}
+    for i in (1, 2, 3):
+        steps = values(C, f"search_{i}")
+        for prev, x in zip(steps, steps[1:]):
+            if x["kind"] == "shake":
+                continue
+            better = [w for w in _neighbors(prev["walk"]) if length(w) < length(prev["walk"])]
+            new = [w for w in better if _cycle(w) not in known[x["r"]]]
+            assert x["walk"] == (new or better or [prev["walk"]])[0]
+            assert (x["kind"] == "opt") == (not better)
+
+
+def test_the_asymmetric_neighborhood_changes_three_ontologies_and_no_criterion(central, asym):
+    """The neighborhood is resolved against the record by the ontology alone (D1, D2)."""
+    assert verify(asym[1]) == []
+    assert _bodies(central[1], "criterion") == _bodies(asym[1], "criterion")
+    assert all("vns_step_asym" in b and "False" in b for b in _bodies(asym[1], "ontology").values())
+    assert _chain(asym[1]) == [(0, [1, 0], 1004), (1, [1, 1], 985), (3, [2, 3], 974), (4, [3, 4], 937)]
+
+
+def test_the_asymmetric_neighborhood_gives_the_same_histories_under_every_schedule(asym):
+    """v3 reads only the rounds that are finished when its round begins, a complete horizon, so the
+    synchronous form keeps one history of every lineage under every schedule (Theorem K)."""
+    expected = lineages(asym[1])
+    for seed in range(2):
+        rnd = random.Random(seed)
+        system, store = System(VNS), MemoryStore()
+        workers.run(system, store, log=quiet, plan=ASYM, hesitate=lambda: time.sleep(rnd.random() * 0.002))
+        C = read(store)
+        assert verify(list(C)) == [] and lineages(C) == expected
+
+
+def test_the_relative_certificate_is_admitted_by_criterion_v2_and_refused_by_v1(strict):
+    """Under ontology v4 no round goes back. Every certificate is of a tour whose shorter neighbors
+    are all recorded in the rounds before its own; criterion v2 admits it, v1 only if it has none."""
+    C = strict[1]
+    D, c = _fri26()
+    length = lambda w: sum(D[w[i - 1]][w[i]] for i in range(len(w)))
+    assert verify(C) == []
+    kpi = values(C, "kpi")[-1]
+    assert kpi["returns"] == _returns(C, c["START"]) == 0 and kpi["relative"] == 12
+    relative = []
+    for n, e in enumerate(C):
+        x = e["payload"]
+        if e["coord"]["kind"] == "exec" and e["coord"]["abstraction"].startswith("search_") and x["kind"] == "opt":
+            better = [w for w in _neighbors(x["walk"]) if length(w) < x["length"]]
+            assert all(_cycle(w) in _recorded_before(C, x["r"]) for w in better)
+            if better:
+                relative.append(n)
+    assert len(relative) == 12
+    n = relative[0]
+    P, w, a = C[:n], C[n]["payload"], C[n]["coord"]["abstraction"]
+    v1 = next(e["coord"]["addr"] for e in C if e["coord"]["kind"] == "spec" and e["coord"]["abstraction"] == a
+              and e["coord"]["role"] == "criterion" and e["coord"]["version"] == 1)
+    assert evaluation.judge(P, lookups.load(P, C[n]["coord"]["criterion"]), w)       # criterion v2
+    assert not evaluation.judge(P, lookups.load(P, v1), w)                            # criterion v1
+    m = next(k for k, e in enumerate(C) if e["coord"]["kind"] == "exec" and e["coord"]["abstraction"] == a
+             and e["payload"]["kind"] == "move")                                      # in round 0 nothing is recorded
+    P, prev = C[:m], values(C[:m], a)[-1]
+    false = dict(C[m]["payload"], kind="opt", m=-1, walk=prev["walk"], length=prev["length"])
+    assert not evaluation.judge(P, lookups.load(P, C[m]["coord"]["criterion"]), false)

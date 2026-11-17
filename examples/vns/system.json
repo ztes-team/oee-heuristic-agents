@@ -10,7 +10,7 @@
                         "src_length": "integer", "m": "integer", "walk": {"list": "integer"}, "length": "integer"}},
     "Best": {"record": {"r": "integer", "src": {"list": "integer"}, "walk": {"list": "integer"}, "length": "integer",
                         "improved": "boolean"}},
-    "Kpi":  {"record": {"profile": "integer", "rounds": "integer", "moves": "integer",
+    "Kpi":  {"record": {"profile": "integer", "rounds": "integer", "moves": "integer", "returns": "integer", "relative": "integer",
                         "optima": "integer", "shakes_by_k": {"list": "integer"}, "better_by_k": {"list": "integer"},
                         "best": "integer", "found_by": {"list": "integer"}, "optimum": "integer",
                         "gap_permille": "integer", "search_invocations": "integer", "search_not_yet": "integer"}}
@@ -79,7 +79,7 @@
     "events": 390,
     "states": {"draw": "closed", "search_1": "wait", "search_2": "wait", "search_3": "wait", "incumbent": "wait"},
     "last": {"incumbent": {"r": 9, "src": [3, 4], "length": 937}},
-    "values": {"kpi": [{"profile": 1, "rounds": 10, "moves": 273, "optima": 30, "shakes_by_k": [12, 9, 6],
+    "values": {"kpi": [{"profile": 1, "rounds": 10, "moves": 273, "returns": 14, "relative": 0, "optima": 30, "shakes_by_k": [12, 9, 6],
                         "better_by_k": [1, 0, 1], "best": 937, "found_by": [3, 4], "optimum": 937, "gap_permille": 0,
                         "search_invocations": 441, "search_not_yet": 108}]}
   }
