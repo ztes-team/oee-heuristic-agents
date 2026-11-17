@@ -1,0 +1,6 @@
+{
+  "note": "[ω] the incumbent after the next round, once every searcher has certified its local optimum of that round",
+  "inputs": {"context": ["before", "opts"]},
+  "returns": "Best",
+  "body": {"result": "None if before['r'] + 1 >= R else round_best(S, START, D, before['r'] + 1, before, opts)"}
+}

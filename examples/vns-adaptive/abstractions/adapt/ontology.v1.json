@@ -1,0 +1,15 @@
+{
+  "note": "[ω] after round r: the returns since the current form came into force; past TOLERANCE, the next form from round r + 1, carried; otherwise nothing",
+  "inputs": {
+    "context": [
+      "made",
+      "last",
+      "rounds",
+      "history"
+    ]
+  },
+  "returns": "Decision",
+  "body": {
+    "result": "decision(R, TOLERANCE, START, STAGES, made, last, rounds, history)"
+  }
+}

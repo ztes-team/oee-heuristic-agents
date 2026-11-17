@@ -1,0 +1,49 @@
+{
+  "constants": {
+    "STAGES": [
+      {
+        "$specifications": [
+          "search_1/ontology.v2",
+          "search_2/ontology.v2",
+          "search_3/ontology.v2"
+        ]
+      },
+      {
+        "$specifications": [
+          "search_1/criterion.v2",
+          "search_1/ontology.v3",
+          "search_2/criterion.v2",
+          "search_2/ontology.v3",
+          "search_3/criterion.v2",
+          "search_3/ontology.v3"
+        ]
+      }
+    ],
+    "note": "the forms the agent may put in force, in order: each is the list of specification files it carries, expanded when the system is loaded"
+  },
+  "bindings": {
+    "made": {
+      "from": "$self",
+      "select": "count",
+      "note": "decisions already recorded: the next is for round made"
+    },
+    "last": {
+      "from": "$self",
+      "select": "last",
+      "type": "Decision",
+      "default": {
+        "r": -1,
+        "returns": 0,
+        "form": 0,
+        "since": 0,
+        "specifications": []
+      },
+      "note": "the last decision; before the first, form 0 (the plan's) in force since round 0"
+    },
+    "rounds": {
+      "from": "incumbent",
+      "select": "count",
+      "note": "rounds whose incumbent is recorded"
+    }
+  }
+}

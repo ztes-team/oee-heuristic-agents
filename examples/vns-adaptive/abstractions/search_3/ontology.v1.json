@@ -1,0 +1,15 @@
+{
+  "note": "[ω] synchronous cooperation: shake the incumbent of the round every searcher has finished, once the agent has decided for that round, then descend",
+  "inputs": {
+    "context": [
+      "prev",
+      "rolls",
+      "inc",
+      "decided"
+    ]
+  },
+  "returns": "Step",
+  "body": {
+    "result": "None if not decided_for(R, prev, decided) else vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source_sync(START, D, prev, inc))"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "note": "[τ] the authority of the agent: one decision per finished round, with the returns the record gives; the next form, carried exactly, only when the returns since the current form exceed TOLERANCE; nothing else",
+  "inputs": {
+    "context": [
+      "made",
+      "last",
+      "rounds",
+      "history"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Decision"
+    }
+  },
+  "body": {
+    "result": "admissible_decision(R, TOLERANCE, START, STAGES, made, last, rounds, history, w)"
+  }
+}

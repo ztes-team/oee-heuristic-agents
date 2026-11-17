@@ -1,0 +1,16 @@
+{
+  "note": "[ω] the asymmetric neighborhood (ontology v3 of examples/vns), synchronous, waiting for the agent: the descent does not take a move to a tour recorded in the finished rounds while another improving move exists. Not in the plan: the agent carries it",
+  "inputs": {
+    "context": {
+      "prev": "prev",
+      "rolls": "rolls",
+      "inc": "inc",
+      "decided": "decided",
+      "steps": "history"
+    }
+  },
+  "returns": "Step",
+  "body": {
+    "result": "None if not decided_for(R, prev, decided) else vns_step_asym(I, S, R, KMAX, D, MOVES, prev, rolls, source_sync(START, D, prev, inc), steps, False)"
+  }
+}

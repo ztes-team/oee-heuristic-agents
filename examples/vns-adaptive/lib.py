@@ -1,0 +1,336 @@
+# Helper functions shared by the specifications of the vns system.
+# A specification receives a copy of the helpers it uses, so its recorded form stays self-contained.
+# No helper contains an unbounded loop: every loop runs over a fixed finite set (the cities, the
+# 2-opt moves, the k moves of a shake). The loops of the method itself are not here; they are
+# the interaction of the abstractions through the record.
+
+def full(LOWER, N):
+    """The symmetric distance matrix from its lower triangle, row by row (TSPLIB LOWER_DIAG_ROW)."""
+    return [[LOWER[a][b] if b <= a else LOWER[b][a] for b in range(N)] for a in range(N)]
+
+
+def tour_length(D, walk):
+    """The length of the closed tour that visits the cities in the order of the walk."""
+    return sum(D[walk[i - 1]][walk[i]] for i in range(len(walk)))
+
+
+def valid(walk, N):
+    """Every city exactly once."""
+    return sorted(walk) == [c for c in range(N)]
+
+
+def two_opt_moves(N):
+    """The 2-opt neighborhood N1 in a fixed order: each move (a, b) removes the edges after
+    positions a and b, which are not adjacent, and reverses the cities between them."""
+    return [[a, b] for a in range(N) for b in range(a + 2, N) if not (a == 0 and b == N - 1)]
+
+
+def change(D, MOVES, walk, m):
+    """How much move m changes the length of the tour (negative: shorter), in O(1)."""
+    a = MOVES[m][0]
+    b = MOVES[m][1]
+    n = len(walk)
+    return (D[walk[a]][walk[b]] + D[walk[a + 1]][walk[(b + 1) % n]]
+            - D[walk[a]][walk[a + 1]] - D[walk[b]][walk[(b + 1) % n]])
+
+
+def reverse(MOVES, walk, m):
+    """The tour after move m."""
+    a = MOVES[m][0]
+    b = MOVES[m][1]
+    return [walk[c] for c in range(a + 1)] + [walk[c] for c in range(b, a, -1)] + [walk[c] for c in range(b + 1, len(walk))]
+
+
+def first_improving(D, MOVES, walk):
+    """[ω] The first move, in the fixed order, that shortens the tour; -1 if none does.
+
+    The improving neighbors of a tour form a multivalued relation; taking the first in a fixed
+    order resolves it to one candidate (D1) without a choice function."""
+    for m in range(len(MOVES)):
+        if change(D, MOVES, walk, m) < 0:
+            return m
+    return -1
+
+
+def shaken(MOVES, walk, roll, k):
+    """A tour in N_k of the given one: the first k moves of the recorded draw, applied in order."""
+    x = [c for c in walk]
+    for j in range(k):
+        x = reverse(MOVES, x, roll[j])
+    return x
+
+
+def source_sync(START, D, prev, inc):
+    """[ω] What a searcher shakes in its next round under synchronous cooperation: the incumbent of
+    the round it has just finished, once every searcher has finished that round; before round 0
+    the starting tour. None (wait) while the incumbent of that round is not yet recorded."""
+    if prev["r"] < 0:
+        return [[0, -1], START, tour_length(D, START)]
+    if inc["r"] != prev["r"]:
+        return None
+    return [inc["src"], inc["walk"], inc["length"]]
+
+
+def source_async(START, D, prev, opts):
+    """[ω] What a searcher shakes in its next round under asynchronous cooperation: the shortest
+    local optimum certified so far by any searcher, as it stands now; before round 0 the starting tour."""
+    best = [[0, -1], START, tour_length(D, START)]
+    if prev["r"] < 0:
+        return best
+    for o in opts:
+        if o["length"] < best[2]:
+            best = [[o["i"], o["r"]], o["walk"], o["length"]]
+    return best
+
+
+def vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source):
+    """[ω] The next step of searcher I: a shake, an improving move, or the certificate of a local
+    optimum; None (⊥) while it must wait, and after the last round.
+
+    After a certificate (or before round 0) the searcher shakes the tour that `source` names in
+    the neighborhood N_k, with k by the rule of basic VNS: back to 1 when the tour to shake has
+    improved since the previous round, otherwise the next neighborhood. After a shake or a move
+    it descends: the first improving 2-opt move, or, if there is none, the certificate."""
+    if prev["kind"] == "opt":
+        r = prev["r"] + 1
+        if r >= R or source is None or len(rolls) <= r * S + I - 1:
+            return None
+        if prev["r"] < 0:
+            k = KMAX
+        elif source[2] < prev["src_length"]:
+            k = 1
+        else:
+            k = prev["k"] % KMAX + 1
+        walk = shaken(MOVES, source[1], rolls[r * S + I - 1], k)
+        return {"i": I, "r": r, "k": k, "kind": "shake", "src": [v for v in source[0]], "src_length": source[2],
+                "m": -1, "walk": walk, "length": tour_length(D, walk)}
+    m = first_improving(D, MOVES, prev["walk"])
+    walk = prev["walk"] if m < 0 else reverse(MOVES, prev["walk"], m)
+    return {"i": I, "r": prev["r"], "k": prev["k"], "kind": "opt" if m < 0 else "move", "src": prev["src"],
+            "src_length": prev["src_length"], "m": m, "walk": walk, "length": tour_length(D, walk)}
+
+
+# ---- the asymmetric neighborhood: the neighbors of a tour are resolved against the record ----
+
+def same_tour(a, b):
+    """Two walks are one tour of the symmetric problem: equal, or one read backwards from the first city."""
+    n = len(a)
+    return len(b) == n and (all(a[c] == b[c] for c in range(n)) or all(a[c] == b[(n - c) % n] for c in range(n)))
+
+
+def among(walks, walk):
+    """Whether the tour is one of the given walks."""
+    for w in walks:
+        if same_tour(w, walk):
+            return True
+    return False
+
+
+def recorded(steps, r):
+    """[C] The tours the searchers recorded in the rounds before r, grouped by length. When round r
+    begins those rounds are finished, so this is the same under every schedule (a complete horizon)."""
+    out = {}
+    for x in steps:
+        if x["r"] < r:
+            if x["length"] in out:
+                out[x["length"]].append(x["walk"])
+            else:
+                out[x["length"]] = [x["walk"]]
+    return out
+
+
+def first_improving_new(D, MOVES, walk, known):
+    """The first move, in the fixed order, that shortens the tour to a tour not among the recorded
+    ones (`known`); -1 if there is none. The neighborhood of a tour is thus resolved against the
+    record: as the record grows it can only shrink (C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C)), and the way
+    back to a recorded tour, which the inverse of the shake always offers, is not taken."""
+    length = tour_length(D, walk)
+    for m in range(len(MOVES)):
+        d = change(D, MOVES, walk, m)
+        if d < 0 and (length + d not in known or not among(known[length + d], reverse(MOVES, walk, m))):
+            return m
+    return -1
+
+
+def vns_step_asym(I, S, R, KMAX, D, MOVES, prev, rolls, source, steps, strict):
+    """[ω] The next step of searcher I in the asymmetric neighborhood. The shake is that of vns_step.
+    The descent takes the first improving move to a tour not recorded in the finished rounds. If
+    every improving move leads to a recorded tour, v3 (strict false) takes the first of them, since
+    criterion v1 certifies only a tour that no move shortens; v4 (strict true) certifies the tour
+    relative to the record, which criterion v2 admits."""
+    if prev["kind"] == "opt":
+        return vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source)
+    m = first_improving_new(D, MOVES, prev["walk"], recorded(steps, prev["r"]))
+    if m < 0 and not strict:
+        m = first_improving(D, MOVES, prev["walk"])
+    walk = prev["walk"] if m < 0 else reverse(MOVES, prev["walk"], m)
+    return {"i": I, "r": prev["r"], "k": prev["k"], "kind": "opt" if m < 0 else "move", "src": prev["src"],
+            "src_length": prev["src_length"], "m": m, "walk": walk, "length": tour_length(D, walk)}
+
+
+def admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w):
+    """[τ] A step of searcher I is admitted if it is a legitimate step of VNS from the previous one,
+    whatever strategy chose it: a shake of the starting tour or of a certified local optimum,
+    within N_k for some k ≤ KMAX, by the searcher's recorded draw of that round; an improving
+    2-opt move; or a certificate that no 2-opt move shortens the tour."""
+    if w["i"] != I or not valid(w["walk"], N) or tour_length(D, w["walk"]) != w["length"]:
+        return False
+    if w["kind"] == "shake":
+        r = w["r"]
+        if prev["kind"] != "opt" or r != prev["r"] + 1 or r >= R or w["k"] < 1 or w["k"] > KMAX or w["m"] != -1:
+            return False
+        if len(rolls) <= r * S + I - 1:
+            return False
+        source = START if w["src"] == [0, -1] else None
+        for o in opts:
+            if [o["i"], o["r"]] == w["src"]:
+                source = o["walk"]
+        if source is None or tour_length(D, source) != w["src_length"]:
+            return False
+        return w["walk"] == shaken(MOVES, source, rolls[r * S + I - 1], w["k"])
+    if prev["kind"] == "opt" or [w["r"], w["k"], w["src"], w["src_length"]] != [prev["r"], prev["k"], prev["src"], prev["src_length"]]:
+        return False
+    if w["kind"] == "move":
+        return 0 <= w["m"] < len(MOVES) and w["walk"] == reverse(MOVES, prev["walk"], w["m"]) and w["length"] < prev["length"]
+    return (w["kind"] == "opt" and w["m"] == -1 and w["walk"] == prev["walk"]
+            and all(change(D, MOVES, w["walk"], m) >= 0 for m in range(len(MOVES))))
+
+
+def admissible_relative(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, steps, w):
+    """[τ] Criterion v2: every step criterion v1 admits, and the certificate of a tour relative to the
+    record: no move shortens it to a tour that the rounds before its own have not recorded. Once it
+    holds it holds in every extension of the record (an upper set of the prefix order). Criterion v1
+    admits a subset of what v2 admits: the change of criterion widens admission."""
+    if admissible(I, S, R, KMAX, N, START, D, MOVES, prev, rolls, opts, w):
+        return True
+    same = ["r", "k", "src", "src_length", "walk", "length"]
+    return (w["i"] == I and w["kind"] == "opt" and w["m"] == -1 and prev["kind"] != "opt"
+            and all(w[f] == prev[f] for f in same)
+            and first_improving_new(D, MOVES, w["walk"], recorded(steps, w["r"])) < 0)
+
+
+def round_best(S, START, D, r, before, opts):
+    """The incumbent after round r: the shortest of the previous incumbent and the S local optima of
+    round r (among equals the earlier, then the searcher with the smaller number); None until
+    every searcher has certified its local optimum of round r."""
+    found = [o for o in opts if o["r"] == r]
+    if len(found) < S:
+        return None
+    out = {"r": r, "src": [0, -1], "walk": START, "length": tour_length(D, START), "improved": False}
+    if before["r"] >= 0:
+        out = {"r": r, "src": before["src"], "walk": before["walk"], "length": before["length"], "improved": False}
+    for i in range(1, S + 1):
+        for o in found:
+            if o["i"] == i and o["length"] < out["length"]:
+                out = {"r": r, "src": [i, r], "walk": o["walk"], "length": o["length"], "improved": True}
+    return out
+
+
+def measure(KMAX, OPT, START, D, MOVES, steps, bests, decisions, profile, profiles):
+    """The indicators of the search (KPI abstraction), all read from the record.
+
+    shakes_by_k and better_by_k count, for each neighborhood N_k, the shakes made in it and the
+    local optima reached from them that are shorter than the tour shaken; round 0, which shakes
+    the starting tour, is initialization and is not counted. returns counts the certificates of
+    the very tour their round shook: the descent went back. relative counts the certificates
+    relative to the record (criterion v2), whose tour some move still shortens. changes gives the
+    rounds from which the agent put a new form in force, and form the last form (0, 1, 2)."""
+    shakes_by_k = [0 for k in range(KMAX)]
+    better_by_k = [0 for k in range(KMAX)]
+    moves = 0
+    optima = 0
+    certified = {}
+    for x in steps:
+        if x["kind"] == "move":
+            moves += 1
+        elif x["kind"] == "opt":
+            optima += 1
+            certified[(x["i"], x["r"])] = x["walk"]
+        if x["r"] > 0 and x["kind"] == "shake":
+            shakes_by_k[x["k"] - 1] += 1
+        if x["r"] > 0 and x["kind"] == "opt" and x["length"] < x["src_length"]:
+            better_by_k[x["k"] - 1] += 1
+    returns = 0
+    relative = 0
+    for x in steps:
+        if x["kind"] == "opt":
+            source = START if x["src"] == [0, -1] else certified[(x["src"][0], x["src"][1])]
+            if same_tour(x["walk"], source):
+                returns += 1
+            if first_improving(D, MOVES, x["walk"]) >= 0:
+                relative += 1
+    last = bests[-1]
+    searchers = [x for x in profile if x["abstraction"].startswith("search_")]
+    return {"profile": profiles, "rounds": len(bests), "moves": moves, "optima": optima, "returns": returns,
+            "relative": relative,
+            "shakes_by_k": shakes_by_k, "better_by_k": better_by_k, "best": last["length"], "found_by": last["src"],
+            "optimum": OPT, "gap_permille": (last["length"] - OPT) * 1000 // OPT,
+            "search_invocations": sum(x["I"] for x in searchers), "search_not_yet": sum(x["U"] for x in searchers),
+            "changes": [d["since"] for d in decisions if len(d["specifications"]) > 0],
+            "form": decisions[-1]["form"] if decisions else 0}
+
+
+# ---- the adaptive agent: after every round, a decision read from the record ----
+
+def decided_for(R, prev, decided):
+    """[ω] Whether a searcher may go on. After its certificate of round r < R − 1 it waits until the
+    agent has recorded its decision for round r (`decided` decisions are recorded, one per round,
+    in order), so that a change of form takes effect at the start of a round, at the same position
+    of every lineage under every schedule. Within a round it never waits."""
+    return prev["kind"] != "opt" or prev["r"] < 0 or prev["r"] >= R - 1 or decided > prev["r"]
+
+
+def returns_in(START, steps, first, last):
+    """[C] The returns of rounds first to last: the certificates of the very tour their round
+    shook (the descent went back), as the indicator `returns` counts them. steps may be frozen."""
+    certified = {}
+    for x in steps:
+        if x["kind"] == "opt":
+            certified[(x["i"], x["r"])] = x["walk"]
+    n = 0
+    for x in steps:
+        if x["kind"] == "opt" and first <= x["r"] <= last:
+            source = START if x["src"][1] < 0 else certified[(x["src"][0], x["src"][1])]
+            if same_tour(x["walk"], source):
+                n += 1
+    return n
+
+
+def written(specs):
+    """The carried specifications as the agent wrote them: without the criterion that Z₀ binds each
+    carried ontology to, which the criterion of the agent sees."""
+    return [{f: s[f] for f in s if not (s["role"] == "ontology" and f == "criterion")} for s in specs]
+
+
+def decision(R, TOLERANCE, START, STAGES, made, last, rounds, history):
+    """[ω] The decision of the agent for round r = made, once the incumbent of round r is recorded
+    (then every searcher has certified round r and waits for this decision); None after round
+    R − 2, since the last round has no next one.
+
+    The sensor is the number of returns since the current form came into force (round `since`).
+    When it exceeds TOLERANCE and a further form exists, the agent puts it in force from round
+    r + 1 by carrying its specifications (STAGES[form]): first the asymmetric neighborhood, a
+    change of ontology alone, then the strict form with the certificate relative to the record,
+    a change of criterion and of the ontology bound to it. Otherwise it carries nothing."""
+    r = made
+    if r >= R - 1 or rounds <= r:
+        return None
+    n = returns_in(START, history, last["since"], r)
+    if n > TOLERANCE and last["form"] < len(STAGES):
+        return {"r": r, "returns": n, "form": last["form"] + 1, "since": r + 1, "specifications": STAGES[last["form"]]}
+    return {"r": r, "returns": n, "form": last["form"], "since": last["since"], "specifications": []}
+
+
+def admissible_decision(R, TOLERANCE, START, STAGES, made, last, rounds, history, w):
+    """[τ] The authority of the agent. A decision is admitted for the next round whose incumbent is
+    recorded, with the returns since the current form came into force as the record gives them.
+    It may keep the form and carry nothing; it may put the next form in force from the next round,
+    carrying exactly the specifications of that form, and only when the returns exceed TOLERANCE.
+    It may change nothing else: no other abstraction, no other version, not itself."""
+    r = made
+    if w["r"] != r or r >= R - 1 or rounds <= r or w["returns"] != returns_in(START, history, last["since"], r):
+        return False
+    if w["form"] == last["form"]:
+        return w["since"] == last["since"] and len(w["specifications"]) == 0
+    return (w["form"] == last["form"] + 1 <= len(STAGES) and w["returns"] > TOLERANCE and w["since"] == r + 1
+            and written(w["specifications"]) == STAGES[last["form"]])

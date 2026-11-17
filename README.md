@@ -7,8 +7,8 @@ of the method become interaction through the record, a claim about a whole neigh
 admitted certificate, and every run replays (R2). The systems are executed by
 [ZTES](https://github.com/ztes-team/ztes-minimal), the minimal zero-tier execution substrate of the
 paper *A Calculus of Execution for Systems of Interacting Binary Relations*, installed as a
-package. ZTES is not changed for these examples: everything specific to a heuristic is in its
-directory, as JSON specifications and one `lib.py` of bounded functions.
+package. ZTES contains nothing specific to these examples: everything specific to a heuristic is
+in its directory, as JSON specifications and one `lib.py` of bounded functions.
 
 | Example | Heuristic | Abstractions | Events | What it shows |
 |---|---|---|---|---|
@@ -16,6 +16,7 @@ directory, as JSON specifications and one `lib.py` of bounded functions.
 | [`vns-atsp`](examples/vns-atsp/DESIGN.md) | the same on ftv38 (TSPLIB, asymmetric, optimum 1,530) | 5 | 1,195 | a neighborhood that keeps the direction of every arc it does not cut; nothing in the lifting changes; the asymmetric neighborhood reaches a shorter tour |
 | [`vns-tw`](examples/vns-tw/DESIGN.md) | the same on ftv38 with time windows and precedence constraints, under a recorded environment | 8 | 349 | a late city is False and a premature one Not Yet, and the prefix order gives the repair rule; a chance constraint on recorded scenarios and an audit of the probability of being on time; three sources of chance (algorithm, schedule, environment) in one record |
 | [`vns-hk`](examples/vns-hk/DESIGN.md) | the searchers of `vns` beside 26 city abstractions that compute a Held–Karp lower bound on fri26 | 33 | 934 | heterogeneous agents in one record: the cities are the dual, each moves its own potential, and a minimum 1-tree is admitted in each round; the bound proves the incumbent optimal, a claim about every tour made one admitted event; aimed at the incumbent the cities need 18 rounds, aimed at the starting tour 330 |
+| [`vns-adaptive`](examples/vns-adaptive/DESIGN.md) | the searchers of `vns` and an agent that changes their form during the run | 6 | 393 | an adaptive heuristic agent: after every round it reads the returns in the record and, past a tolerance, carries the next form of the searchers, first a change of ontology, then of criterion; its criterion is the authority over what may change and on what evidence; every change is in force from the start of a round under every schedule, and replays |
 
 ## vns: variable neighborhood search by cooperating searchers
 
@@ -83,6 +84,21 @@ horizon is complete before it is read, so the 33 workers give the same history o
 under every schedule. Aimed at the starting tour instead (ontology v2 of the cities, the same
 criteria), the bound needs 330 rounds. See [`examples/vns-hk/DESIGN.md`](examples/vns-hk/DESIGN.md).
 
+## vns-adaptive: an agent changes the form of the search
+
+In the other examples a form of the searchers is put in force by the experimenter, before the
+searchers start. Here one more abstraction, `adapt`, decides after every round whether to change
+it, from the returns the record holds since the current form came into force. Past a tolerance of
+two its candidate carries the next form: first ontology v2 of the three searchers (the asymmetric
+neighborhood, criteria unchanged), then criterion v2 and the ontology v3 bound to it (the
+certificate relative to the record). Its criterion is the authority. It admits keeping the form at
+any time, and the next form, carried exactly, only past the tolerance and on the returns the record
+gives; it admits nothing else. With seed 7 the forms change from rounds 3 and 7, and the incumbent
+reaches 937 in round 4. Over seeds 1–40 the agent ends shorter than its starting form in 7 seeds and
+longer in 2, but not shorter than the best fixed form chosen in hindsight. The searchers wait for the
+decision of each round, so a change is at the same position of every lineage under every schedule.
+See [`examples/vns-adaptive/DESIGN.md`](examples/vns-adaptive/DESIGN.md).
+
 ## Running
 
 Python 3.12 or later.
@@ -97,6 +113,7 @@ python -m ztes run examples/vns-tw         # about 6 s, and as long for R2
 python -m ztes run examples/vns-tw --record DIR && python -m ztes verify DIR --judgments
                                               # R2 by re-judging the recorded steps only: 0.6 s
 python -m ztes run examples/vns-hk
+python -m ztes run examples/vns-adaptive
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
@@ -130,7 +147,7 @@ workers.run(System("examples/vns"), MemoryStore(), plan=asynchronous)         # 
 
 ## Tests
 
-`tests/test_vns.py`, `tests/test_vns_atsp.py`, `tests/test_vns_tw.py` and `tests/test_vns_hk.py` apply to the examples the checks ZTES applies to
+`tests/test_vns.py`, `tests/test_vns_atsp.py`, `tests/test_vns_tw.py`, `tests/test_vns_hk.py` and `tests/test_vns_adaptive.py` apply to the examples the checks ZTES applies to
 each of its own, and check what the `DESIGN.md` files claim.
 
 | Test | What it checks |
@@ -171,6 +188,13 @@ each of its own, and check what the `DESIGN.md` files claim.
 | `test_every_potential_moves_in_the_direction_of_the_subgradient` (vns-hk) | up above degree 2, down at degree 1, unchanged at 2 |
 | `test_the_criteria_know_nothing_of_the_strategy` (vns-hk) | D2: a longer step in the same direction is admitted, one against it refused; a 1-tree that is not minimum, a false bound, a proof of 938 or from round 17 are refused |
 | `test_aiming_at_the_starting_tour_takes_eighteen_times_as_many_rounds` (vns-hk) | ontology v2 of the cities, the same criteria: the proof in round 330 instead of 18 |
+| `test_the_same_histories_under_random_schedules_and_killed_workers` (vns-adaptive) | the change of form at the same position of every lineage, under random schedules and with workers killed |
+| `test_each_form_is_in_force_from_the_start_of_a_round` (vns-adaptive) | every step is proposed and judged by the versions active at its position: v1 in rounds 0–2, v2 in 3–6, v3 under criterion v2 in 7–9 |
+| `test_every_decision_is_the_rule_applied_to_the_record` (vns-adaptive) | the returns counted in the test, the rule applied to them; what is carried is what the files say, each ontology bound to the criterion carried before it |
+| `test_the_authority_admits_the_next_form_only_past_the_tolerance` (vns-adaptive) | D2 for the agent: waiting is admitted; a change without the evidence, a form out of order or incomplete, a change of another abstraction or of the agent itself, evidence the record does not hold are refused |
+| `test_the_same_record_over_http` (vns-adaptive) | every abstraction an HTTP service: the same record, the carried specifications included |
+| `test_tau_root_judges_what_the_agent_carries` (vns-adaptive) | a version carried out of line is refused by τ_root, not by the agent's criterion |
+| `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |
 
 ## License
 

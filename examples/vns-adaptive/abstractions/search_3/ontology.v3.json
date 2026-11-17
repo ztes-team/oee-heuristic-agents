@@ -1,0 +1,16 @@
+{
+  "note": "[ω] the strict asymmetric neighborhood (ontology v4 of examples/vns), bound to criterion v2: the descent never enters a tour recorded in the finished rounds and certifies relative to the record when nothing else is left. Not in the plan: the agent carries it with criterion v2",
+  "inputs": {
+    "context": {
+      "prev": "prev",
+      "rolls": "rolls",
+      "inc": "inc",
+      "decided": "decided",
+      "steps": "history"
+    }
+  },
+  "returns": "Step",
+  "body": {
+    "result": "None if not decided_for(R, prev, decided) else vns_step_asym(I, S, R, KMAX, D, MOVES, prev, rolls, source_sync(START, D, prev, inc), steps, True)"
+  }
+}
