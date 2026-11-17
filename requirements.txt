@@ -1,2 +1,2 @@
 # ZTES, the substrate that executes the examples, at the commit these examples were checked with.
-ztes[test] @ git+https://github.com/ztes-team/ztes-minimal@e3cf118978571162e2c9182a7447509e39d02430
+ztes[test] @ git+https://github.com/ztes-team/ztes-minimal@93539c383f1862ae813ccbc8c9a3e496d7d6d757

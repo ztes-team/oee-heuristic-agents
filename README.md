@@ -94,6 +94,8 @@ python -m ztes run examples/vns --workers     # phase 3 by one worker per abstra
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
 python -m ztes run examples/vns-atsp
 python -m ztes run examples/vns-tw         # about 6 s, and as long for R2
+python -m ztes run examples/vns-tw --record DIR && python -m ztes verify DIR --judgments
+                                              # R2 by re-judging the recorded steps only: 0.6 s
 python -m ztes run examples/vns-hk
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
