@@ -1,0 +1,16 @@
+{
+  "note": "[τ] the incumbent of a round is the best tour certified up to it (lexicographic value), by definition",
+  "inputs": {
+    "context": [
+      "before",
+      "opts"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Best"
+    }
+  },
+  "body": {
+    "result": "w['r'] == before['r'] + 1 < R and w == round_best(S, w['r'], before, opts)"
+  }
+}

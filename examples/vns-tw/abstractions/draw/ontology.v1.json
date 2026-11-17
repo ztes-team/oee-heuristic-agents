@@ -1,0 +1,8 @@
+{
+  "note": "[ω] boundary, the algorithm's chance: one occurrence of the random source, KMAX move indices below |N1|; not computed from C",
+  "boundary": true,
+  "returns": "Draw",
+  "inputs": {
+    "context": {}
+  }
+}

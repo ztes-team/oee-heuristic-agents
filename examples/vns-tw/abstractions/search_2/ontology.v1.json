@@ -1,0 +1,18 @@
+{
+  "note": "[ω] synchronous cooperation: shake the incumbent of the round every searcher has finished, repair (moves that cut before the first position that is not admissible), shorten; ⊥ until the world is recorded and while the incumbent of that round is not",
+  "requires": {
+    "world": "M"
+  },
+  "inputs": {
+    "context": [
+      "prev",
+      "rolls",
+      "inc",
+      "worlds"
+    ]
+  },
+  "returns": "Step",
+  "body": {
+    "result": "searcher_v1(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, worlds)"
+  }
+}

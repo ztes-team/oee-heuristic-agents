@@ -1,0 +1,18 @@
+{
+  "note": "[τ] what the step states about its tour is true, and it is a legitimate step of VNS from the previous one, whatever strategy chose it: a shake by the recorded draw, any move that lowers the value, or a certificate that none does",
+  "inputs": {
+    "context": [
+      "prev",
+      "rolls",
+      "opts",
+      "worlds"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Step"
+    }
+  },
+  "body": {
+    "result": "searcher_criterion(I, S, R, KMAX, N, RHO, START, D, A, B, PAIRS, ALLOW, MOVES, prev, rolls, opts, worlds, w)"
+  }
+}

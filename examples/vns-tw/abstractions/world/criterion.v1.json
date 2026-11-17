@@ -1,0 +1,15 @@
+{
+  "note": "[τ] M scenarios, each one seed",
+  "inputs": {
+    "context": [
+      "worlds_n"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Seed"
+    }
+  },
+  "body": {
+    "result": "worlds_n < M and len(w) == 1 and w[0] >= 0"
+  }
+}

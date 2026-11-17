@@ -1,0 +1,8 @@
+{
+  "note": "[ω] boundary, the environment's chance once more: the seed from which AUDIT further scenarios are derived, which the search never reads",
+  "boundary": true,
+  "returns": "Seed",
+  "inputs": {
+    "context": {}
+  }
+}

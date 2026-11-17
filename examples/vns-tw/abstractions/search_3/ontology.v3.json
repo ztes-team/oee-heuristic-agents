@@ -1,0 +1,19 @@
+{
+  "note": "[ω] the asymmetric neighborhood, synchronous cooperation: as v1, but the descent (repair and shortening) does not take a move to a tour recorded in the finished rounds while another move would do",
+  "requires": {
+    "world": "M"
+  },
+  "inputs": {
+    "context": [
+      "prev",
+      "rolls",
+      "inc",
+      "steps",
+      "worlds"
+    ]
+  },
+  "returns": "Step",
+  "body": {
+    "result": "searcher_v3(I, S, R, KMAX, N, RHO, D, A, B, PAIRS, ALLOW, MOVES, START, prev, rolls, inc, steps, worlds)"
+  }
+}

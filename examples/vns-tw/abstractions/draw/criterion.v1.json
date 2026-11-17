@@ -1,0 +1,15 @@
+{
+  "note": "[τ] a well-formed draw is admitted while the budget S·R lasts; once admitted it is evidence (S1.4)",
+  "inputs": {
+    "context": [
+      "draws"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Draw"
+    }
+  },
+  "body": {
+    "result": "draws < S * R and len(w) == KMAX and all(0 <= m < len(MOVES) for m in w)"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "note": "[ω] boundary, the environment's chance: the seed of one scenario of the travel times; the scenario itself is a pure function of the recorded seed",
+  "boundary": true,
+  "returns": "Seed",
+  "inputs": {
+    "context": {}
+  }
+}

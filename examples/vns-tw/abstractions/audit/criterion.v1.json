@@ -1,0 +1,15 @@
+{
+  "note": "[τ] one seed",
+  "inputs": {
+    "context": [
+      "audits_n"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Seed"
+    }
+  },
+  "body": {
+    "result": "audits_n < 1 and len(w) == 1 and w[0] >= 0"
+  }
+}
