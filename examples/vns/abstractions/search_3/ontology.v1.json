@@ -1,0 +1,6 @@
+{
+  "note": "[ω] synchronous cooperation: shake the incumbent of the round every searcher has finished, then descend; ⊥ while the incumbent of that round is not recorded",
+  "inputs": {"context": ["prev", "rolls", "inc"]},
+  "returns": "Step",
+  "body": {"result": "vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source_sync(START, D, prev, inc))"}
+}

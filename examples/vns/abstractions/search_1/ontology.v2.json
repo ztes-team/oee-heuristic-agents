@@ -1,0 +1,6 @@
+{
+  "note": "[ω] asynchronous cooperation: shake the shortest local optimum certified so far by any searcher, as it stands now; nothing is waited for",
+  "inputs": {"context": ["prev", "rolls", "opts"]},
+  "returns": "Step",
+  "body": {"result": "vns_step(I, S, R, KMAX, D, MOVES, prev, rolls, source_async(START, D, prev, opts))"}
+}

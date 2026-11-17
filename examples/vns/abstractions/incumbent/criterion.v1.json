@@ -1,0 +1,5 @@
+{
+  "note": "[τ] the incumbent of a round is the shortest tour certified up to it, by definition",
+  "inputs": {"context": ["before", "opts"], "candidate": {"name": "w", "type": "Best"}},
+  "body": {"result": "w['r'] == before['r'] + 1 < R and w == round_best(S, START, D, w['r'], before, opts)"}
+}
