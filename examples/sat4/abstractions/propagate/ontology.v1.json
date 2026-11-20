@@ -1,0 +1,7 @@
+{
+  "note": "Propose the first unit clause in the visible clause list.",
+  "requires": {"branch": 1},
+  "inputs": {"context": ["branches", "propagations", "learned"]},
+  "returns": "Propagation",
+  "body": {"result": "propose_unit(FORMULA, branches, propagations, learned)"}
+}

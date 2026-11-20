@@ -1,0 +1,8 @@
+{
+  "note": "Check a full assignment against the propagated retry and every original clause.",
+  "inputs": {
+    "context": ["branches", "propagations", "witnesses"],
+    "candidate": {"name": "w", "type": "Assignment"}
+  },
+  "body": {"result": "not witnesses and check_witness(FORMULA, VARIABLES, branches, propagations, w)"}
+}

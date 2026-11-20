@@ -1,0 +1,5 @@
+{
+  "note": "Check the resolvent of the original reason and conflict clauses.",
+  "inputs": {"context": ["propagations", "conflicts", "learned"], "candidate": {"name": "w", "type": "Learned"}},
+  "body": {"result": "not learned and w == resolution_certificate(FORMULA, propagations, conflicts)"}
+}

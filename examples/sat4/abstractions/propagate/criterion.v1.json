@@ -1,0 +1,8 @@
+{
+  "note": "Check the reason clause and its unique unassigned literal at the current branch.",
+  "inputs": {
+    "context": ["branches", "propagations", "learned"],
+    "candidate": {"name": "w", "type": "Propagation"}
+  },
+  "body": {"result": "check_unit(FORMULA, branches, propagations, learned, w)"}
+}

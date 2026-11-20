@@ -1,0 +1,9 @@
+{
+  "note": "Use the admitted conflict and resolvent to authorize the designated retry rule once.",
+  "constants": {"UPGRADE": {"$specifications": ["branch/ontology.v2"]}},
+  "inputs": {
+    "context": ["conflicts", "learned", "switches"],
+    "candidate": {"name": "w", "type": "Adaptation"}
+  },
+  "body": {"result": "check_switch(conflicts, learned, switches, UPGRADE, w)"}
+}

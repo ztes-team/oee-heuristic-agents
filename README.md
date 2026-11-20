@@ -18,6 +18,7 @@ in its directory, as JSON specifications and one `lib.py` of bounded functions.
 | [`vns-hk`](examples/vns-hk/DESIGN.md) | the searchers of `vns` beside 26 city abstractions that compute a Held–Karp lower bound on fri26 | 33 | 934 | heterogeneous agents in one record: the cities are the dual, each moves its own potential, and a minimum 1-tree is admitted in each round; the bound proves the incumbent optimal, a claim about every tour made one admitted event; aimed at the incumbent the cities need 18 rounds, aimed at the starting tour 330 |
 | [`vns-adaptive`](examples/vns-adaptive/DESIGN.md) | the searchers of `vns` and an agent that changes their form during the run | 6 | 393 | an adaptive heuristic agent: after every round it reads the returns in the record and, past a tolerance, carries the next form of the searchers, first a change of ontology, then of criterion; its criterion is the authority over what may change and on what evidence; every change is in force from the start of a round under every schedule, and replays |
 | [`cptl`](examples/cptl/DESIGN.md) | parity and a strict budget along a path with declared precedence | 3 | 21 | a locally valid trial has a certified obstruction in the next stage. A governed change uses the recorded two-state suffix certificates to build an optimum. A native dynamic program and flat sampling supply comparisons. |
+| [`sat4`](examples/sat4/DESIGN.md) | propagation and resolution on two 4-CNF clauses | 6 | 21 | a conflict closes one branch. A checked resolvent is reused after a governed change and forces a literal in the retry. |
 
 ## vns: variable neighborhood search by cooperating searchers
 
@@ -107,6 +108,13 @@ and measured execution cost. A local proof rules out the greedy trial and suppli
 activating a new route ontology. The same two-state recurrence gives the optimum in the native and
 ZTES runs. The [case study](examples/cptl/DESIGN.md) gives the proof, replay commands and benchmark.
 
+## sat4
+
+The two-clause example from Section 8.3 of the heuristic-search manuscript records a branch conflict,
+checks a resolution proof from the original clauses, and reuses the derived clause during a governed
+retry. The [design](examples/sat4/DESIGN.md) gives the evidence for each decision, the expected SAT
+witness and the replay commands.
+
 ## Running
 
 Python 3.12 or later.
@@ -123,6 +131,7 @@ python -m ztes run examples/vns-tw --record DIR && python -m ztes verify DIR --j
 python -m ztes run examples/vns-hk
 python -m ztes run examples/vns-adaptive
 python -m ztes run examples/cptl
+python -m ztes run examples/sat4
 python scripts/benchmark_cptl.py               # native DP, flat samples and checked OEE runs
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
@@ -163,6 +172,9 @@ each of its own, and check what the `DESIGN.md` files claim.
 `tests/test_cptl.py` checks the local projection and exact path solution against exhaustive
 enumeration. It also verifies both replay modes and checks which ontology is active at each
 side of the governing event.
+
+`tests/test_sat4.py` checks the learned clause on all 16 assignments and replays the executed trace.
+It also checks the version boundary and verifies that the criteria refuse incorrect evidence.
 
 | Test | What it checks |
 |---|---|
@@ -212,6 +224,9 @@ side of the governing event.
 | `test_the_route_criterion_refuses_an_invalid_witness_or_a_broken_route` (cptl) | a witness over the budget or of even parity, a skipped stage, a broken link and a second trial are refused |
 | `test_the_governing_criterion_admits_only_the_designated_version_on_an_obstructed_trial` (cptl) | another body, more than the designated version, nothing carried, a false obstruction, a second decision, and a decision without an obstruction are refused |
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_by_workers_under_random_schedules_and_killed_workers` (cptl) | the checks applied to every example, at 6 and 20 stages |
+| `test_the_criteria_refuse_a_candidate_out_of_turn_or_malformed` (sat4) | on the record: a first branch of another length or with a variable twice, a retry before the governing event or of another shape, the propagation of another branch, a second decision, and a witness that does not extend the retry or repeats a variable are refused |
+| `test_the_helpers_refuse_what_this_instance_cannot_show` (sat4) | on small inputs: a satisfied clause forces nothing, a tautology or parents without a clash give no resolvent, a witness that falsifies a clause is refused |
+| `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_under_random_schedules_and_killed_workers` (sat4) | the checks applied to every example, with an interruption after every event |
 | `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |
 
 ## License

@@ -1,0 +1,8 @@
+{
+  "note": "Check falsification under the trial assumptions and the admitted unit.",
+  "inputs": {
+    "context": ["branches", "propagations", "conflicts"],
+    "candidate": {"name": "w", "type": "Conflict"}
+  },
+  "body": {"result": "check_conflict(FORMULA, branches, propagations, conflicts, w)"}
+}

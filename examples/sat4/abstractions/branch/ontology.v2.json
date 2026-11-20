@@ -1,0 +1,10 @@
+{
+  "note": "Retry the prefix before the last assumption when the learned clause is unit there.",
+  "requires": {"learn": 1},
+  "inputs": {"context": ["branches", "learned"]},
+  "returns": "Branch",
+  "body": {
+    "assumptions": "branches[0]['assumptions'][:-1] if len(branches) == 1 else None",
+    "result": "{'id': 1, 'assumptions': assumptions} if assumptions is not None and unit_literal(learned[0]['literals'], assumptions) is not None else None"
+  }
+}

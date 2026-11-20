@@ -1,0 +1,46 @@
+{
+  "system": "sat4",
+  "title": "A 4-CNF conflict, a reusable resolvent and a governed retry",
+  "abstractions": ["branch", "propagate", "conflict", "learn", "adapt", "witness"],
+  "constants": {
+    "VARIABLES": [1, 2, 3, 4],
+    "FORMULA": [[1, 2, 3, 4], [-1, 2, 3, 4]],
+    "PROBE": [-2, -3, -4]
+  },
+  "types": {
+    "Branch": {"record": {"id": "integer", "assumptions": {"list": "integer"}}},
+    "Propagation": {"record": {"branch": "integer", "reason": "integer", "literal": "integer"}},
+    "Conflict": {"record": {"branch": "integer", "clause": "integer"}},
+    "Learned": {
+      "record": {"left": "integer", "right": "integer", "pivot": "integer", "literals": {"list": "integer"}}
+    },
+    "Adaptation": {"record": {"conflicts": "integer", "specifications": {"list": "specification"}}},
+    "Assignment": {"list": "integer"}
+  },
+  "bindings": {
+    "branches": {"from": "branch", "select": "all", "type": "Branch"},
+    "propagations": {"from": "propagate", "select": "all", "type": "Propagation"},
+    "conflicts": {"from": "conflict", "select": "all", "type": "Conflict"},
+    "learned": {"from": "learn", "select": "all", "type": "Learned"},
+    "switches": {"from": "adapt", "select": "count"},
+    "witnesses": {"from": "witness", "select": "count"}
+  },
+  "expect": {
+    "events": 21,
+    "states": {
+      "branch": "wait",
+      "propagate": "wait",
+      "conflict": "wait",
+      "learn": "wait",
+      "adapt": "wait",
+      "witness": "wait"
+    },
+    "values": {
+      "branch": [{"id": 0, "assumptions": [-2, -3, -4]}, {"id": 1, "assumptions": [-2, -3]}],
+      "propagate": [{"branch": 0, "reason": 0, "literal": 1}, {"branch": 1, "reason": 2, "literal": 4}],
+      "conflict": [{"branch": 0, "clause": 1}],
+      "learn": [{"left": 0, "right": 1, "pivot": 1, "literals": [2, 3, 4]}],
+      "witness": [[-1, -2, -3, 4]]
+    }
+  }
+}

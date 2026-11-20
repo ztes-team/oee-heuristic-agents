@@ -1,0 +1,6 @@
+{
+  "note": "Propose the negative-first trial of the worked example.",
+  "inputs": {"context": ["branches"]},
+  "returns": "Branch",
+  "body": {"result": "{'id': 0, 'assumptions': PROBE} if not branches else None"}
+}

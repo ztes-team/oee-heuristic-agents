@@ -1,0 +1,7 @@
+{
+  "note": "Use the trial's reason and conflict to choose the resolution parents.",
+  "requires": {"conflict": 1},
+  "inputs": {"context": ["propagations", "conflicts", "learned"]},
+  "returns": "Learned",
+  "body": {"result": "resolution_certificate(FORMULA, propagations, conflicts) if not learned else None"}
+}

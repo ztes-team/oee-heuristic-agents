@@ -1,0 +1,8 @@
+{
+  "note": "Propose the retry rule when the first conflict and its resolvent are recorded.",
+  "constants": {"UPGRADE": {"$specifications": ["branch/ontology.v2"]}},
+  "requires": {"learn": 1},
+  "inputs": {"context": ["conflicts", "learned", "switches"]},
+  "returns": "Adaptation",
+  "body": {"result": "{'conflicts': len(conflicts), 'specifications': UPGRADE} if conflicts and len(learned) == 1 and not switches else None"}
+}

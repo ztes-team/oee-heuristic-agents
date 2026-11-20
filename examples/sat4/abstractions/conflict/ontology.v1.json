@@ -1,0 +1,7 @@
+{
+  "note": "Look for an original clause falsified by the propagated trial.",
+  "requires": {"propagate": 1},
+  "inputs": {"context": ["branches", "propagations", "conflicts"]},
+  "returns": "Conflict",
+  "body": {"result": "propose_conflict(FORMULA, branches, propagations, conflicts)"}
+}

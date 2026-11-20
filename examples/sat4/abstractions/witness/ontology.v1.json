@@ -1,0 +1,7 @@
+{
+  "note": "Complete the propagated retry to a full assignment.",
+  "requires": {"propagate": 2},
+  "inputs": {"context": ["branches", "propagations", "witnesses"]},
+  "returns": "Assignment",
+  "body": {"result": "propose_witness(VARIABLES, branches, propagations) if not witnesses else None"}
+}
