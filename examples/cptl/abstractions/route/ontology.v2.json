@@ -1,0 +1,6 @@
+{
+  "note": "Choose the next link using the verified suffix rows.",
+  "inputs": {"context": ["root", "rows", "previous"]},
+  "returns": "Step",
+  "body": {"result": "planned_step(GUARDS, rows, previous) if root['count'][0] else None"}
+}

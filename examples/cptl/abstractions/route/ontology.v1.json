@@ -1,0 +1,6 @@
+{
+  "note": "Propose one locally greedy trial before committing to a route.",
+  "inputs": {"context": ["trial", "previous"]},
+  "returns": "Step",
+  "body": {"result": "greedy_probe(GUARDS, trial, previous)"}
+}

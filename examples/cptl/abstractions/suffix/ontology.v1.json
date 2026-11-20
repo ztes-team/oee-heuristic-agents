@@ -1,0 +1,6 @@
+{
+  "note": "Propose one row covering both possible incoming links.",
+  "inputs": {"context": ["last"]},
+  "returns": "Row",
+  "body": {"result": "next_row(GUARDS, last)"}
+}

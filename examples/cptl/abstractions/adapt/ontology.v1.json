@@ -1,0 +1,7 @@
+{
+  "note": "Propose the approved policy when the recorded greedy trial has no continuation through the next gate.",
+  "constants": {"UPGRADE": {"$specifications": ["route/ontology.v2"]}},
+  "inputs": {"context": ["made", "trial"]},
+  "returns": "Adaptation",
+  "body": {"result": "{'blocked_stage': 1, 'incoming': trial['link'], 'specifications': UPGRADE} if made == 0 and blocked_probe(GUARDS, trial) else None"}
+}

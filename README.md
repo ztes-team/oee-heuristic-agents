@@ -10,13 +10,14 @@ paper *A Calculus of Execution for Systems of Interacting Binary Relations*, ins
 package. ZTES contains nothing specific to these examples: everything specific to a heuristic is
 in its directory, as JSON specifications and one `lib.py` of bounded functions.
 
-| Example | Heuristic | Abstractions | Events | What it shows |
+| Example | Method | Abstractions | Events | What it shows |
 |---|---|---|---|---|
 | [`vns`](examples/vns/DESIGN.md) | variable neighborhood search by three cooperating searchers on fri26 (TSPLIB, symmetric, optimum 937) | 5 | 390 | every loop of VNS is interaction; each local optimum is a certificate; the criterion admits any step of VNS (D2); synchronous cooperation gives the same record under every schedule, with no lock, no message and no master process; the asymmetric neighborhood and the certificate relative to the record |
 | [`vns-atsp`](examples/vns-atsp/DESIGN.md) | the same on ftv38 (TSPLIB, asymmetric, optimum 1,530) | 5 | 1,195 | a neighborhood that keeps the direction of every arc it does not cut; nothing in the lifting changes; the asymmetric neighborhood reaches a shorter tour |
 | [`vns-tw`](examples/vns-tw/DESIGN.md) | the same on ftv38 with time windows and precedence constraints, under a recorded environment | 8 | 349 | a late city is False and a premature one Not Yet, and the prefix order gives the repair rule; a chance constraint on recorded scenarios and an audit of the probability of being on time; three sources of chance (algorithm, schedule, environment) in one record |
 | [`vns-hk`](examples/vns-hk/DESIGN.md) | the searchers of `vns` beside 26 city abstractions that compute a Held–Karp lower bound on fri26 | 33 | 934 | heterogeneous agents in one record: the cities are the dual, each moves its own potential, and a minimum 1-tree is admitted in each round; the bound proves the incumbent optimal, a claim about every tour made one admitted event; aimed at the incumbent the cities need 18 rounds, aimed at the starting tour 330 |
 | [`vns-adaptive`](examples/vns-adaptive/DESIGN.md) | the searchers of `vns` and an agent that changes their form during the run | 6 | 393 | an adaptive heuristic agent: after every round it reads the returns in the record and, past a tolerance, carries the next form of the searchers, first a change of ontology, then of criterion; its criterion is the authority over what may change and on what evidence; every change is in force from the start of a round under every schedule, and replays |
+| [`cptl`](examples/cptl/DESIGN.md) | parity and a strict budget along a path with declared precedence | 3 | 21 | a locally valid trial has a certified obstruction in the next stage. A governed change uses the recorded two-state suffix certificates to build an optimum. A native dynamic program and flat sampling supply comparisons. |
 
 ## vns: variable neighborhood search by cooperating searchers
 
@@ -99,6 +100,13 @@ longer in 2, but not shorter than the best fixed form chosen in hindsight. The s
 decision of each round, so a change is at the same position of every lineage under every schedule.
 See [`examples/vns-adaptive/DESIGN.md`](examples/vns-adaptive/DESIGN.md).
 
+## CPTL as the exact reference case
+
+Section 3 of the heuristic-search manuscript uses CPTL to connect structural inference, policy change
+and measured execution cost. A local proof rules out the greedy trial and supplies the evidence for
+activating a new route ontology. The same two-state recurrence gives the optimum in the native and
+ZTES runs. The [case study](examples/cptl/DESIGN.md) gives the proof, replay commands and benchmark.
+
 ## Running
 
 Python 3.12 or later.
@@ -114,6 +122,8 @@ python -m ztes run examples/vns-tw --record DIR && python -m ztes verify DIR --j
                                               # R2 by re-judging the recorded steps only: 0.6 s
 python -m ztes run examples/vns-hk
 python -m ztes run examples/vns-adaptive
+python -m ztes run examples/cptl
+python scripts/benchmark_cptl.py               # native DP, flat samples and checked OEE runs
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
@@ -149,6 +159,10 @@ workers.run(System("examples/vns"), MemoryStore(), plan=asynchronous)         # 
 
 `tests/test_vns.py`, `tests/test_vns_atsp.py`, `tests/test_vns_tw.py`, `tests/test_vns_hk.py` and `tests/test_vns_adaptive.py` apply to the examples the checks ZTES applies to
 each of its own, and check what the `DESIGN.md` files claim.
+
+`tests/test_cptl.py` checks the local projection and exact path solution against exhaustive
+enumeration. It also verifies both replay modes and checks which ontology is active at each
+side of the governing event.
 
 | Test | What it checks |
 |---|---|

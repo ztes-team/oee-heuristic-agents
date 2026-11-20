@@ -1,0 +1,5 @@
+{
+  "note": "Check the Bellman bound and count using the next recorded row.",
+  "inputs": {"context": ["last"], "candidate": {"name": "w", "type": "Row"}},
+  "body": {"result": "w == next_row(GUARDS, last)"}
+}

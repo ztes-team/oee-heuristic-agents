@@ -1,0 +1,6 @@
+{
+  "note": "Verify the obstruction and admit only the designated route ontology.",
+  "constants": {"UPGRADE": {"$specifications": ["route/ontology.v2"]}},
+  "inputs": {"context": ["made", "trial"], "candidate": {"name": "w", "type": "Adaptation"}},
+  "body": {"result": "check_adaptation(GUARDS, UPGRADE, made, trial, w)"}
+}

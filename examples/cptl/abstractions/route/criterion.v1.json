@@ -1,0 +1,5 @@
+{
+  "note": "Check parity, the strict budget and recorded precedence. Check a committed step against the suffix certificate.",
+  "inputs": {"context": ["rows", "trial", "previous"], "candidate": {"name": "w", "type": "Step"}},
+  "body": {"result": "check_step(GUARDS, rows, trial, previous, w)"}
+}
