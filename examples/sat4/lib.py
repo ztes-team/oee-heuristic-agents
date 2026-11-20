@@ -11,17 +11,14 @@ def consistent_assignment(variables, assignment):
     return len(set(assigned)) == len(assigned) and all(var in variables for var in assigned)
 
 
-def check_branch(variables, branches, learned, switches, candidate):
-    """[τ] The criterion of branch. The first branch is a consistent assignment of three
-    assumptions; the second, the retry, is admitted only after the governing event of adapt and
-    the admitted resolvent, and only as the first branch without its last assumption."""
-    assumptions = candidate["assumptions"]
-    if candidate["id"] != len(branches) or not consistent_assignment(variables, assumptions):
-        return False
-    if not branches:
-        return len(assumptions) == 3
-    return (len(branches) == 1 and switches == 1 and len(learned) == 1
-            and assumptions == branches[0]["assumptions"][:-1])
+def check_branch(variables, branches, candidate):
+    """[τ] The criterion of branch: the next branch, whose assumptions are a consistent assignment of
+    variables of the formula. Which branch to try is the ontology's choice (D2): version 1 proposes
+    the probe and nothing after it, and the retry rule is in force only from the governing event of
+    adapt that carries version 2 (R1). The later steps are checked against the original clauses and
+    their admitted resolvents, so any branch admitted here leaves the conflict, the resolvent and
+    the witness sound."""
+    return candidate["id"] == len(branches) and consistent_assignment(variables, candidate["assumptions"])
 
 
 def unit_literal(clause, assignment):

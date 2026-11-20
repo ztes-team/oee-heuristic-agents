@@ -18,14 +18,14 @@ The resolution proof uses $D_1$ and $D_2$ as parents and $x$ as the pivot. Its r
 
 | Abstraction | Proposal | Admission check |
 |---|---|---|
-| `branch` | Version 1 proposes the fixed negative-first trial. Version 2 retries the prefix before its last assumption if the learned clause is unit there. | Check consistent assignments and branch order. A retry uses the shorter prefix after a governing event and a checked resolvent. |
+| `branch` | Version 1 proposes the fixed negative-first trial. Version 2 retries the prefix before its last assumption if the learned clause is unit there. | Check that the next branch is a consistent assignment of variables of the formula. Which branch is tried is the ontology's choice (D2); the retry rule is in force only from the governing event (R1). |
 | `propagate` | Select the first unit in the visible clauses. | Read the stated reason at the current branch and check that its unique unassigned literal has the proposed sign. |
 | `conflict` | Locate a false original clause after propagating the trial. | Check every literal of that clause under the recorded trial and its unit. |
 | `learn` | Resolve the original reason and conflict clauses. | Check the original parent indices, complementary pivot and resulting clause. |
 | `adapt` | Carry `branch/ontology.v2` after the conflict and resolvent are admitted. | Check the conflict count and the designated version. The substrate binds the carried ontology to the active branch criterion. |
 | `witness` | Give a value to the remaining variable and propose a complete assignment. | Check the retry and its unit, consistency and completeness of the assignment, and satisfaction of every original clause. |
 
-Clause indices 0 and 1 refer to the input clauses. The admitted resolvent has index 2 in the visible clause list. Branch indices distinguish the conflict under the first assumptions from the later propagation. The governing event activates the retry rule under R1. R2 checks the proposals and judgments under their original prefixes and specification versions.
+Clause indices 0 and 1 refer to the input clauses. The admitted resolvent has index 2 in the visible clause list. Branch indices distinguish the conflict under the first assumptions from the later propagation. The governing event activates the retry rule under R1. R2 checks the proposals and judgments under their original prefixes and specification versions. The replay of judgments alone shows that every branch is a correct step; the full replay also shows that every branch is the one the active ontology proposed, so the retry follows the governing event.
 
 ## Reproduction
 

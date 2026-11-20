@@ -5,9 +5,10 @@ both replay modes and by workers, and the governing event against the ontology a
 of it. The checks applied to every example follow: an interrupted run continues to the same record,
 and workers give the lineages of the agenda under random schedules and with workers killed. The
 criteria are then checked as authorities (D2): on the record, a candidate out of turn or malformed
-is refused; on small inputs written here, the helpers refuse what this one instance cannot show (a
-satisfied clause as a reason, a tautology or a resolvent without a clash, a witness that falsifies a
-clause).
+is refused, and any correct branch is admitted, while which branch is tried is the choice of the
+active ontology, put in force by the governing event (R1); on small inputs written here, the
+helpers refuse what this one instance cannot show (a satisfied clause as a reason, a tautology or a
+resolvent without a clash, a witness that falsifies a clause).
 """
 import copy
 import random
@@ -175,15 +176,51 @@ def test_the_criteria_refuse_a_candidate_out_of_turn_or_malformed(agenda):
     switch, = positions(record, "adapt")
     second, = positions(record, "propagate")[1:]
     witness, = positions(record, "witness")
-    assert not judges(record, trial, {"id": 0, "assumptions": [-2, -3]})           # not three assumptions
     assert not judges(record, trial, {"id": 0, "assumptions": [-2, -2, -4]})       # a variable twice
-    retried = record[retry]["payload"]
-    assert not judges(record, retry, retried, prefix_length=switch)                 # before the governing event
-    assert not judges(record, retry, dict(retried, assumptions=[-2, -4]))           # not the first branch shortened
+    assert not judges(record, trial, {"id": 0, "assumptions": [-2, 2, -4]})        # a variable with both signs
+    assert not judges(record, trial, {"id": 0, "assumptions": [-2, -3, 5]})        # not a variable of the formula
+    assert not judges(record, trial, {"id": 1, "assumptions": [-2, -3, -4]})       # out of turn
+    assert not judges(record, retry, dict(record[retry]["payload"], id=0))          # out of turn
     assert not judges(record, second, dict(record[second]["payload"], branch=0))    # the propagation of another branch
     assert not judges(record, switch, record[switch]["payload"], prefix_length=switch + 1)   # a second decision
     assert not judges(record, witness, [1, 2, -3, -4])                              # a model that does not extend the retry
     assert not judges(record, witness, [4, -2, -3, 4])                              # four literals, one variable twice
+
+
+def test_which_branch_is_the_ontologys_choice_put_in_force_by_the_governing_event(agenda):
+    """D2: the criterion of branch admits any next branch that is a consistent assignment, the probe,
+    another first branch, the retry or another one, at any position. R1: which branch is tried is
+    chosen by the active ontology, and the retry rule is in force only from the governing event.
+    Version 1 proposes nothing after the probe, on every prefix up to the retry; version 2,
+    carried by adapt, proposes the retry, only once the resolvent is admitted and where it is unit.
+    Another correct second branch passes the replay of judgments and fails the full replay (R2)."""
+    _, record = agenda
+    trial, retry = positions(record, "branch")
+    switch, = positions(record, "adapt")
+    learn, = positions(record, "learn")
+    retried = record[retry]["payload"]
+    for first in ([-1, -2, -3], [1], [], [4, -3, 2, -1]):
+        assert judges(record, trial, {"id": 0, "assumptions": first})             # another strategy, still correct
+    assert judges(record, retry, retried, prefix_length=switch)                     # correct before the event too
+    assert judges(record, retry, dict(retried, assumptions=[-2, -4]))               # another second branch
+    probe = lookups.load(record, record[trial]["coord"]["ontology"])
+    upgraded = lookups.load(record, record[retry]["coord"]["ontology"])
+    assert (probe["version"], upgraded["version"]) == (1, 2)
+    assert evaluation.realize(record[:trial], probe) == record[trial]["payload"]
+    assert all(evaluation.realize(record[:n], probe) is None for n in range(trial + 1, retry + 1))
+    assert evaluation.realize(record[:retry], upgraded) == retried
+    assert evaluation.realize(record[:learn], upgraded) is None                     # no resolvent yet
+    satisfied = [dict(e, payload=dict(e["payload"], assumptions=[-2, 4, -3])) if n == trial else e
+                 for n, e in enumerate(record[:retry])]
+    assert evaluation.realize(satisfied, upgraded) is None                          # the resolvent is satisfied at [-2, 4]
+    assert all(lookups.active(record[:n], "branch", "ontology") == record[trial]["coord"]["ontology"]
+               for n in range(trial + 1, switch + 1))
+    assert all(lookups.active(record[:n], "branch", "ontology") == record[retry]["coord"]["ontology"]
+               for n in range(switch + 1, retry + 1))
+    other = record[:retry] + [dict(record[retry], payload=dict(retried, assumptions=[-2, -4]))]
+    assert verify(other, judgments_only=True) == []                                 # a correct step
+    (at, why), = verify(other)                                                      # not the one the ontology proposed
+    assert at == retry and why.startswith("S1.2/S1.4 realization gives")
 
 
 LIB_SPEC = spec_from_file_location("sat4_lib", EXAMPLE / "lib.py")

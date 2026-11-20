@@ -1,5 +1,5 @@
 {
-  "note": "Check the trial assignment and admit a shorter retry after the governed change.",
-  "inputs": {"context": ["branches", "learned", "switches"], "candidate": {"name": "w", "type": "Branch"}},
-  "body": {"result": "check_branch(VARIABLES, branches, learned, switches, w)"}
+  "note": "Admit the next branch if its assumptions are a consistent assignment; which branch is the ontology's choice.",
+  "inputs": {"context": ["branches"], "candidate": {"name": "w", "type": "Branch"}},
+  "body": {"result": "check_branch(VARIABLES, branches, w)"}
 }

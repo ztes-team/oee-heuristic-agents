@@ -174,7 +174,8 @@ enumeration. It also verifies both replay modes and checks which ontology is act
 side of the governing event.
 
 `tests/test_sat4.py` checks the learned clause on all 16 assignments and replays the executed trace.
-It also checks the version boundary and verifies that the criteria refuse incorrect evidence.
+It also checks the version boundary and verifies that the criteria refuse incorrect evidence and
+admit any correct branch, the choice of branch being the active ontology's.
 
 | Test | What it checks |
 |---|---|
@@ -224,7 +225,8 @@ It also checks the version boundary and verifies that the criteria refuse incorr
 | `test_the_route_criterion_refuses_an_invalid_witness_or_a_broken_route` (cptl) | a witness over the budget or of even parity, a skipped stage, a broken link and a second trial are refused |
 | `test_the_governing_criterion_admits_only_the_designated_version_on_an_obstructed_trial` (cptl) | another body, more than the designated version, nothing carried, a false obstruction, a second decision, and a decision without an obstruction are refused |
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_by_workers_under_random_schedules_and_killed_workers` (cptl) | the checks applied to every example, at 6 and 20 stages |
-| `test_the_criteria_refuse_a_candidate_out_of_turn_or_malformed` (sat4) | on the record: a first branch of another length or with a variable twice, a retry before the governing event or of another shape, the propagation of another branch, a second decision, and a witness that does not extend the retry or repeats a variable are refused |
+| `test_the_criteria_refuse_a_candidate_out_of_turn_or_malformed` (sat4) | on the record: a branch with a variable twice or with both signs, outside the formula or out of turn, the propagation of another branch, a second decision, and a witness that does not extend the retry or repeats a variable are refused |
+| `test_which_branch_is_the_ontologys_choice_put_in_force_by_the_governing_event` (sat4) | D2 and R1: the criterion admits any consistent next branch, also the retry before the governing event; ontology version 1 proposes nothing after the probe, and version 2, active only from the governing event, proposes the retry once the resolvent is admitted and only where it is unit; another correct second branch passes the replay of judgments and fails the full replay |
 | `test_the_helpers_refuse_what_this_instance_cannot_show` (sat4) | on small inputs: a satisfied clause forces nothing, a tautology or parents without a clash give no resolvent, a witness that falsifies a clause is refused |
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_under_random_schedules_and_killed_workers` (sat4) | the checks applied to every example, with an interruption after every event |
 | `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |
