@@ -177,6 +177,12 @@ side of the governing event.
 It also checks the version boundary and verifies that the criteria refuse incorrect evidence and
 admit any correct branch, the choice of branch being the active ontology's.
 
+`tests/test_sat4_ksat.py` checks sat4 beyond its instance, against all assignments. It runs the same
+trace for every k from 2 to 8 and checks the criteria on random k-CNF formulas. It also checks
+evolutive consensus in the sense of the FUEE paper (Section 8,
+[doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)): the composite criterion is the
+conjunction of the clause criteria over the shared record.
+
 | Test | What it checks |
 |---|---|
 | `test_is_well_formed`, `test_meets_its_expected_end` | the static check of the system; the end stated in `expect` (events, states, the incumbent, the indicators) |
@@ -227,6 +233,11 @@ admit any correct branch, the choice of branch being the active ontology's.
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_by_workers_under_random_schedules_and_killed_workers` (cptl) | the checks applied to every example, at 6 and 20 stages |
 | `test_the_criteria_refuse_a_candidate_out_of_turn_or_malformed` (sat4) | on the record: a branch with a variable twice or with both signs, outside the formula or out of turn, the propagation of another branch, a second decision, and a witness that does not extend the retry or repeats a variable are refused |
 | `test_which_branch_is_the_ontologys_choice_put_in_force_by_the_governing_event` (sat4) | D2 and R1: the criterion admits any consistent next branch, also the retry before the governing event; ontology version 1 proposes nothing after the probe, and version 2, active only from the governing event, proposes the retry once the resolvent is admitted and only where it is unit; another correct second branch passes the replay of judgments and fails the full replay |
+| `test_the_trace_runs_and_replays_for_every_k` (sat4 k-SAT) | 56 instances, k = 2..8, random variable numbers, signs, literal and probe order, unused variables: the expected end written for each instance, both replay modes, a resolvent implied by the formula, a closed first branch and a witness that is a model |
+| `test_an_interrupted_run_continues_to_the_same_record_for_every_k`, `test_workers_give_the_lineages_of_the_agenda_for_every_k` (sat4 k-SAT) | the checks applied to every example, at k = 3, 7 and k = 2, 5, 8 |
+| `test_consensus_is_constituted_when_all_clause_criteria_hold_at_once` (sat4 k-SAT) | 120 instances with clauses on other variables: the witness criterion equals the conjunction of the clause criteria on all assignments; a run reaches consensus exactly when the ontology's assignment satisfies every clause, and otherwise ends with the witness closed, either with a model the criterion admits or with none; the consensus is constituted once |
+| `test_each_order_of_the_probe_reaches_its_own_model_under_one_criterion` (sat4 k-SAT) | k − 1 probe orders, one criterion of branch, k − 1 different witnesses, each a model |
+| `test_the_criteria_are_sound_and_exact_on_random_kcnf` (sat4 k-SAT) | 300 random k-CNF formulas, k = 2..6, against all assignments: units forced in every model of the branch, conflicts that leave no model, resolvents implied by the formula and tautologies refused, and the branch, unit, conflict and witness criteria exact |
 | `test_the_helpers_refuse_what_this_instance_cannot_show` (sat4) | on small inputs: a satisfied clause forces nothing, a tautology or parents without a clash give no resolvent, a witness that falsifies a clause is refused |
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_under_random_schedules_and_killed_workers` (sat4) | the checks applied to every example, with an interruption after every event |
 | `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |

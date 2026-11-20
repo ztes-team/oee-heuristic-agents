@@ -37,9 +37,15 @@ python -m ztes run examples/sat4 --record sat4-record
 python -m ztes verify sat4-record
 python -m ztes verify sat4-record --judgments
 python -m ztes run examples/sat4 --workers
-python -m pytest -q tests/test_sat4.py
+python -m pytest -q tests/test_sat4.py tests/test_sat4_ksat.py
 ```
 
 The expected record has 21 events including setup. During execution it records two branches, two propagations, one conflict, one resolution proof, one change of policy and one satisfying assignment. The tests enumerate all 16 assignments independently. Exactly 14 satisfy the formula, every such assignment satisfies the resolvent, and neither completion of the first branch satisfies the formula.
 
 This worked trace uses one fixed probe and one clause-guided retry. The comparison of occurrence-based and conflict-activity branching proposed in Section 8.3 uses families of formulas and matched search budgets.
+
+## Beyond the instance
+
+The criteria are written for any CNF formula; only the ontologies follow this trace. `tests/test_sat4_ksat.py` checks both claims against all assignments. With only its constants changed, the system executes the same trace for every width $k$ from 2 to 8: two clauses $(x\lor A)$ and $(\lnot x\lor A)$ with $|A|=k-1$, under random variable numbers, signs and orders. The test runs 56 such instances and checks replay, interruption and workers. On 300 random $k$-CNF formulas with $k$ from 2 to 6, every unit, conflict, resolvent and witness the criteria admit is checked against the models of the formula.
+
+The witness criterion is the composite criterion $\tau=\tau_1\land\dots\land\tau_m$ of evolutive consensus (FUEE paper, Section 8, [doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)), with one $\tau_i$ per clause, evaluated over the shared record on the completions of the propagated retry. Consensus is constituted when a witness is admitted. The tests add clauses on other variables. When the ontology's assignment falsifies one of them, the run ends with the witness closed ($\tau$ false), and the terminal states and the record show it. In that case the criterion still admits any model that extends the retry, so the gap is in the ontology's choice; or no model extends it, and this path is exhausted. Different orders of the probe are admitted by the same criterion of branch and reach different witnesses, each a model: different strategies, different fixed points.
