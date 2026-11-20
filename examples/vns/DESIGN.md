@@ -156,7 +156,7 @@ Ontology v4 is the strict descent bound to criterion v2: it never enters a recor
 certifies relative to the record when nothing else is left.
 
 With seed 7 the strict form has no return, 12 relative certificates and 255 moves instead of 273;
-its incumbent goes as under v3. Over seeds 1–40 it has 2 returns in all, against 15.2 per run under
+its incumbent goes as under v3. Over seeds 1–40 it has 2 returns in all, against 15.25 per run under
 v1 and 12.8 under v3, and neither came from a descent: in both the draw repeated a move index, the
 two equal 2-opt moves of a shake in N₂ cancelled, and the shake itself landed on the tour it shook.
 The strict form reaches the optimum in 27 runs, and it ends shorter than v1 in 9 seeds and longer

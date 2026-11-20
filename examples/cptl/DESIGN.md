@@ -7,7 +7,7 @@ A native implementation of the same recurrence gives a baseline for the cost of 
 
 ## 1. Problem
 
-Every stage has four bits $x_1,x_2,x_3,x_4$. The weight vector is $(4,3,4,3)$ in tenths of a unit, the weight must be strictly below 8 in these units, and $x_1\oplus x_2\oplus x_3\oplus x_4=1$. Three active bits weigh at least 10. Every feasible stage therefore activates exactly one bit.
+Every stage has four bits $x_1,x_2,x_3,x_4$ with weights $(4,3,4,3)$. The total weight of the active bits must be strictly below 8, and $x_1\oplus x_2\oplus x_3\oplus x_4=1$. Three active bits weigh at least 10. Every feasible stage therefore activates exactly one bit.
 
 Each stage specifies one of two local precedence chains. In **input-first** order, the decision on $x_3$ depends on the earlier decision on $x_1$. In **guard-first** order, the dependency runs the other way. The two remaining decisions follow these two. The rule is that $x_1=1$ followed by the dependent decision on $x_3$ requires $x_2\oplus x_4=1$. Hence the same assignment $(1,0,0,0)$ is admissible with guard-first precedence and fails with input-first precedence. The order in a stage witness represents these declared dependencies. Its validity is checked against the instance's recorded gate mode.
 
@@ -73,6 +73,8 @@ One pilot run on Windows used the pinned ZTES and its in-memory store, with 4,09
 | 100 | 34 | 0 | 1.63 | 0.098 | 0.077 | 209 |
 | 500 | 167 | 0 | 7.79 | 0.943 | 0.955 | 1009 |
 
-At 500 modules the record encoded as JSON occupied 439,034 bytes. A separate traced run measured 1,831,199 bytes of peak Python allocations. The timed native baseline pays for computing and checking the path certificates. The OEE run also admits and stores each event, including the authorization of the policy change.
+At 500 modules the record encoded as JSON occupied 439,034 bytes. A separate traced run measured 1,831,199 bytes of peak Python allocations.
+
+A second run on Linux (x86_64, Python 3.13), after the helpers in `lib.py` were documented, gave the same optima, flat sample hits and events. With the medians of three runs, the native solve and check took 0.07, 0.11, 0.47 and 2.41 ms; the OEE execution 0.020, 0.016, 0.051 and 0.595 s; and the full replay 0.014, 0.015, 0.043 and 0.475 s. The helpers are recorded with their documentation, so the record at 500 modules occupies 447,486 bytes, and the peak of traced allocations was 1,851,730 bytes. Across the two hosts the OEE execution at 500 modules took 120 to 250 times as long as the native solve and check. The timed native baseline pays for computing and checking the path certificates. The OEE run also admits and stores each event, including the authorization of the policy change.
 
 For context on bounded-width constraint solving, see [Freuder, *Complexity of K-Tree Structured Constraint Satisfaction Problems*](https://cdn.aaai.org/AAAI/1990/AAAI90-001.pdf).

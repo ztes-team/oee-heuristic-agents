@@ -72,7 +72,7 @@ Over seeds 1–40, against the fixed forms of `vns` (each a separate run with th
 
 | Form | Reaches 937 | Mean final length | Returns per run | Relative certificates | Moves |
 |---|---|---|---|---|---|
-| v1, synchronous (fixed) | 22 | 946.5 | 15.3 | 0 | 299.5 |
+| v1, synchronous (fixed) | 22 | 946.5 | 15.25 | 0 | 299.5 |
 | v3, asymmetric (fixed) | 28 | 942.7 | 12.8 | 0 | 325.2 |
 | v4, strict (fixed) | 27 | 943.2 | 0.05 | 15.5 | 306.1 |
 | adaptive, tolerance 0 | 23 | 945.1 | 3.7 | 11.7 | 305.1 |

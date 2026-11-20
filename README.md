@@ -208,6 +208,10 @@ side of the governing event.
 | `test_the_authority_admits_the_next_form_only_past_the_tolerance` (vns-adaptive) | D2 for the agent: waiting is admitted; a change without the evidence, a form out of order or incomplete, a change of another abstraction or of the agent itself, evidence the record does not hold are refused |
 | `test_the_same_record_over_http` (vns-adaptive) | every abstraction an HTTP service: the same record, the carried specifications included |
 | `test_tau_root_judges_what_the_agent_carries` (vns-adaptive) | a version carried out of line is refused by τ_root, not by the agent's criterion |
+| `test_the_route_criterion_admits_a_committed_link_only_at_the_recorded_optimum` (cptl) | the other link of every committed step is admitted exactly when it is feasible and attains the recorded optimum |
+| `test_the_route_criterion_refuses_an_invalid_witness_or_a_broken_route` (cptl) | a witness over the budget or of even parity, a skipped stage, a broken link and a second trial are refused |
+| `test_the_governing_criterion_admits_only_the_designated_version_on_an_obstructed_trial` (cptl) | another body, more than the designated version, nothing carried, a false obstruction, a second decision, and a decision without an obstruction are refused |
+| `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_by_workers_under_random_schedules_and_killed_workers` (cptl) | the checks applied to every example, at 6 and 20 stages |
 | `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |
 
 ## License
