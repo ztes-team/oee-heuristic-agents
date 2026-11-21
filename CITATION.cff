@@ -4,7 +4,14 @@ title: "OEE heuristic agents: lifted heuristic search and k-SAT on the zero-tier
 type: software
 version: 1.0.0
 date-released: 2026-11-21
-doi: "10.5281/zenodo.24416247"
+doi: "10.5281/zenodo.24416246"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24416246"
+    description: "All versions (Zenodo concept DOI)"
+  - type: doi
+    value: "10.5281/zenodo.24416247"
+    description: "Version 1.0.0"
 license: MIT
 repository-code: "https://github.com/ztes-team/oee-heuristic-agents"
 authors:
