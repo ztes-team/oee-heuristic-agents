@@ -1,4 +1,7 @@
 # OEE-heuristic-agents
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24416247.svg)](https://doi.org/10.5281/zenodo.24416247)
+
 Heuristic agents lifted into the OEE calculus of execution on the ZTES substrate: metaheuristics as interacting abstractions over one record, starting with cooperative parallel variable neighborhood search. Executable supplement to the paper.
 
 A heuristic is lifted here as a system of abstractions: each step of the method is a candidate

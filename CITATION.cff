@@ -4,6 +4,7 @@ title: "OEE heuristic agents: lifted heuristic search and k-SAT on the zero-tier
 type: software
 version: 1.0.0
 date-released: 2026-11-21
+doi: "10.5281/zenodo.24416247"
 license: MIT
 repository-code: "https://github.com/ztes-team/oee-heuristic-agents"
 authors:
@@ -39,6 +40,7 @@ references:
       - {family-names: "Labus", given-names: "Aleksandra"}
       - {family-names: "Radenković", given-names: "Božidar"}
     version: 0.1.0
+    doi: "10.5281/zenodo.24416120"
     repository-code: "https://github.com/ztes-team/ztes-minimal"
   - type: article
     title: "A Calculus of Execution for Systems of Interacting Binary Relations"
