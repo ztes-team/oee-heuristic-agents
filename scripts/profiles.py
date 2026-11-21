@@ -1,4 +1,4 @@
-"""The KPI profiles of the lifted VNS forms (Table 2 of the paper).
+"""The KPI profiles of the lifted VNS forms (Table 5 of the paper).
 
 Each form is run once under the agenda, with the seeds of its system.json, and its profile is read
 from the record: the profile abstraction of ZTES gives, per abstraction, the invocations I, the

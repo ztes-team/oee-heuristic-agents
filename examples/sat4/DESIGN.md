@@ -1,6 +1,6 @@
 # A 4-SAT conflict and a reusable clause
 
-This example executes the two-clause construction in Section 8.3 of the heuristic-search manuscript. It records a local conflict, derives a clause that can be used across branches, and uses that evidence to govern a retry. The input formula has four variables and two clauses of four literals each.
+This example executes the two-clause construction in Section 4.3 of the paper. It records a local conflict, derives a clause that can be used across branches, and uses that evidence to govern a retry. The input formula has four variables and two clauses of four literals each.
 
 ## Formula and evidence
 
@@ -42,7 +42,7 @@ python -m pytest -q tests/test_sat4.py tests/test_sat4_ksat.py
 
 The expected record has 21 events including setup. During execution it records two branches, two propagations, one conflict, one resolution proof, one change of policy and one satisfying assignment. The tests enumerate all 16 assignments independently. Exactly 14 satisfy the formula, every such assignment satisfies the resolvent, and neither completion of the first branch satisfies the formula.
 
-This worked trace uses one fixed probe and one clause-guided retry. The comparison of occurrence-based and conflict-activity branching proposed in Section 8.3 uses families of formulas and matched search budgets.
+This worked trace uses one fixed probe and one clause-guided retry. The comparison of occurrence-based and conflict-activity branching proposed in Section 10.3 of the paper uses families of formulas and matched search budgets.
 
 ## Beyond the instance
 

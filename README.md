@@ -107,14 +107,14 @@ See [`examples/vns-adaptive/DESIGN.md`](examples/vns-adaptive/DESIGN.md).
 
 ## CPTL as the exact reference case
 
-Section 3 of the heuristic-search manuscript uses CPTL to connect structural inference, policy change
+Sections 4.1 and 6.1 of the paper use CPTL to connect structural inference, policy change
 and measured execution cost. A local proof rules out the greedy trial and supplies the evidence for
 activating a new route ontology. The same two-state recurrence gives the optimum in the native and
 ZTES runs. The [case study](examples/cptl/DESIGN.md) gives the proof, replay commands and benchmark.
 
 ## sat4
 
-The two-clause example from Section 8.3 of the heuristic-search manuscript records a branch conflict,
+The two-clause example of Section 4.3 of the paper records a branch conflict,
 checks a resolution proof from the original clauses, and reuses the derived clause during a governed
 retry. The [design](examples/sat4/DESIGN.md) gives the evidence for each decision, the expected SAT
 witness and the replay commands.
@@ -164,9 +164,19 @@ python scripts/benchmark_ksat.py               # native and checked runs, replay
 python scripts/timings.py                      # run and both replays of every example, medians of three
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
+python scripts/sweeps.py                      # the forms over many seeds (Tables 7-10), about twenty minutes
+python scripts/trials.py                      # schedules and killed workers, about half an hour (--quick: minutes)
 ```
 
-`scripts/profiles.py` runs each form once and reads its KPI profile from the record (Table 2 of
+`scripts/sweeps.py` runs every form once per seed under the agenda and reads its indicators from the
+record: the forms on fri26 and ftv38 over seeds 1–40 (Tables 7 and 8 of the paper), time windows with
+and without the chance constraint (Table 9), the adaptive agent against the fixed forms (Table 10),
+and the shares of the variance of algorithm and environment (Section 7.2). Under the agenda every
+number is the same on every host. `scripts/trials.py` runs phase 3 by workers under random schedules
+and with workers killed and started again, and checks that every lineage has the history it has
+under the agenda and that every record replays; the number of workers killed varies from run to run.
+
+`scripts/profiles.py` runs each form once and reads its KPI profile from the record (Table 5 of
 the paper): the completed and the Pending invocations of the searchers, admission compression,
 ontological compression (the improving moves of every recorded descent step, enumerated after
 the run), the reuse of certified optima by the shakes, and the deferred resolution ratio of the

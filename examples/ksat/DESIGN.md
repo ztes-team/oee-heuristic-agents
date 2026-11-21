@@ -9,7 +9,7 @@ A CNF formula $F = D_1 \land \dots \land D_m$ is lifted so that every clause is 
 
 Learned clauses are not kept in a data structure. Each non-empty learned clause becomes a new abstraction, which the learn event brings in by carrying its specifications. The same event carries a new version of `round` whose horizon includes the new clause. The composite criterion grows under governance (R1) by clauses that $F$ implies, which is the τ-evolution of FUEE (ii). The search procedure is conflict-driven clause learning (CDCL). Its parts are distributed over abstractions that wait for each other only through the record.
 
-`sat4` remains the worked trace of Section 8.3 of the heuristic-search manuscript. ksat is the general method.
+`sat4` remains the worked trace of Section 4.3 of the paper. ksat is the general method.
 
 ## The abstractions
 
@@ -50,7 +50,7 @@ Every new specification enters the record the same way: an abstraction proposes 
 - **`learn` changes what is checked.** The reason is a resolution derivation. The change adds a criterion $\tau_i$ that $F$ implies and extends the horizon of `round`. The models are unchanged, so the composite criterion grows monotonically, as Corollary 1 of the FUEE paper assumes.
 - **`adapt` changes what is tried.** The reason is the number of admitted conflicts. The change is a new ontology of `decide`, and no criterion changes.
 
-The second form is included as a demonstration with one fixed trigger. The comparison proposed in Section 8.3 is left for further work. That comparison uses a window of W decisions, families of formulas and matched budgets. It needs no new mechanism, only the trigger and a measurement.
+The second form is included as a demonstration with one fixed trigger. The comparison proposed in Section 10.3 of the paper is left for further work. That comparison uses a window of W decisions, families of formulas and matched budgets. It needs no new mechanism, only the trigger and a measurement.
 
 ## Strategy and correctness
 

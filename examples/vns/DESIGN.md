@@ -211,6 +211,11 @@ The asymmetric form (v3) and the strict form with criterion v2 (v4), each run by
 random schedules and in 10 runs with 1,617 and 1,517 workers killed, gave in every run the history of
 every lineage that they give under the agenda, and every record replayed.
 
+The results over seeds 1–40 are reproduced by `python scripts/sweeps.py fri26` (one run per seed and
+form under the agenda, the same on every host), and the runs by workers by `python scripts/trials.py
+vns` and `python scripts/trials.py forms`. The number of workers killed varies from run to run (3,166,
+1,565 and 1,606 in a later execution of the script); the histories do not.
+
 ## 7. Files
 
 ```

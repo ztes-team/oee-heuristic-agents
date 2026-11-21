@@ -1,6 +1,6 @@
 # Parity and budget on a path with recorded precedence
 
-The causal parity–threshold lock (CPTL) is the exact reference case in Section 3 of the heuristic-search manuscript.
+The causal parity–threshold lock (CPTL) is the exact reference case in Sections 4.1 and 6.1 of the paper.
 A local check rules out every extension of a greedy trial, and a one-bit separator supports an exact solution (RQ1).
 The governing criterion uses the obstruction to admit a policy change whose activation and subsequent steps can be replayed (RQ2).
 A native implementation of the same recurrence gives a baseline for the cost of checked execution and replay (RQ3).

@@ -82,7 +82,7 @@ not read the cities, so their history is the same under both forms.
 
 Profile under the agenda (invocations, admitted, Pending): the cities 898, 468, 430 (deferred
 resolution ratio 47.9 %); the tree 38, 19, 19; the searchers 441, 333, 108 and the incumbent 116,
-10, 106, as in `vns`. No candidate is refused.
+10, 106, as in `vns`. No candidate is refused except the one draw refused when its budget closes.
 
 By workers (one per abstraction, 33 in all), under random schedules and with workers killed and
 started again, every lineage has the history it has under the agenda.

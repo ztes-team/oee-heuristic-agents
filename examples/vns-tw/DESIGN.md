@@ -94,30 +94,35 @@ varied while the others are held.
 
 Measured in ZTES with the chance constraint:
 
-- **Algorithm × environment** (6 draw seeds × 6 world seeds, v3 under the agenda). Of the variance
-  of the final length, 55 % comes from the algorithm, 15 % from the environment and 30 % from their
-  interaction; of the number of audit scenarios in which the final tour is on time, 45 %, 24 % and
-  31 %. Every run ends feasible, on time in 18 to 20 of the scenarios of its own world.
+- **Algorithm × environment** (draw seeds 1–6 × world seeds 11–16, v3 under the agenda;
+  `python scripts/sweeps.py variance`). Of the variance of the final length, 87.6 % comes from the
+  algorithm, 2.6 % from the environment and 9.8 % from their interaction; of the number of audit
+  scenarios in which the final tour is on time, 12.1 %, 54.6 % and 33.2 %. The design is small,
+  and the shares depend on the seeds chosen: draw seeds 1–6 × world seeds 1–6 give 26 %, 30 % and
+  44 % for the length and 17 %, 40 % and 43 % for the audit. (An earlier version of this note gave
+  shares from a 6 × 6 design whose seeds were not recorded.)
 - **The schedule, synchronous forms.** v1 and v3, each run by workers under 3 schedules (random
-  pauses with seeds 1–3), gave in every run the history of every lineage they give under the
+  pauses with seeds 1–3; `python scripts/trials.py tw`), gave in every run the history of every lineage they give under the
   agenda, and every record replayed: the share of the schedule is exactly 0, by Theorem K, and no
   measure over schedules is needed to say so.
 - **The schedule, asynchronous form.** v2, run by workers over 3 draw seeds × 3 world seeds × 3
   schedules (27 runs, every record replayed): the schedule changed the final tour in 5 of the 9
   combinations of draw and world. Of the variance of the final length, the algorithm explains
   25 %, the environment 6 %, the schedule 9 %, and their interactions 60 % (a 3 × 3 × 3 design:
-  indicative only). Here the measure over schedules is the one posited by the random pauses.
+  indicative only); a later execution of `python scripts/trials.py tw` (draw seeds 1–3, world seeds
+  11–13, schedules 1–3) gave again 5 of 9, and 23 %, 9 %, 8 % and 60 %. Here the measure over
+  schedules is the one posited by the random pauses, and the shares vary from execution to execution.
 
 ## 5. The forms and what they show
 
-Over draw seeds 1–20 (world seed 11, audit seed 999), each form under the agenda:
+Over draw seeds 1–20 (world seed 11, audit seed 999), each form under the agenda (`python scripts/sweeps.py tw`):
 
 | Problem | Form | Optimum reached | Mean gap | On time, world (20) | On time, audit (1,000): mean (min–max) | Returns (of 30) |
 |---|---|---|---|---|---|---|
-| with the chance constraint (ALLOW 2) | v1 | 1 | 7.1 ‰ | 20 in every run | 966 (898–1,000) | 24.9 |
-| | v3 | 8 | 1.6 ‰ | 20 in every run | 932 (898–994) | 16.2 |
-| deterministic (ALLOW = M) | v1 | 0 | 21.2 ‰ | 11.7 | 546 (357–724) | 23.9 |
-| | v3 | 3 | 16.6 ‰ | 10.2 | 519 (357–724) | 16.1 |
+| with the chance constraint (ALLOW 2) | v1 | 1 | 7.1 ‰ | 20 in every run | 966 (898–1,000) | 24.95 |
+| | v3 | 8 | 1.6 ‰ | 20 in every run | 932 (898–994) | 16.25 |
+| deterministic (ALLOW = M) | v1 | 0 | 21.2 ‰ | 11.65 | 546 (357–724) | 23.95 |
+| | v3 | 3 | 16.6 ‰ | 10.25 | 519 (357–724) | 16.05 |
 
 The optimum is the sample-average one (3,492) with the chance constraint and the deterministic one
 (3,415) without it. Every run ends feasible.

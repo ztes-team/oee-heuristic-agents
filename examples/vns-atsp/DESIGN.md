@@ -64,7 +64,9 @@ about the same (1,071, 1,079, 1,092): as on fri26, the gain comes from not going
 
 Both synchronous forms read only finished rounds, so with workers every lineage has the history it
 has under the agenda: the asymmetric form, run by workers under 4 random schedules and in 2 runs with
-977 workers killed, gave that history in every run, and every record replayed.
+977 workers killed, gave that history in every run, and every record replayed. The results over seeds
+1–40 are reproduced by `python scripts/sweeps.py ftv38`, and the runs by workers by `python
+scripts/trials.py ftv38` (the number of workers killed varies from run to run; 958 in a later run).
 
 ## 5. Plan
 
