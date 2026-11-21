@@ -283,3 +283,12 @@ execution of the same relations.
 ## License
 
 MIT, see [LICENSE](LICENSE).
+
+## Notice
+
+The examples in this repository are a supplement to a scientific paper and are provided as is (see
+the license); the authors accept no liability for their use.
+
+"Zero-tier execution substrate" (ZTES), in the sense of tierless execution, is the name of a concept of
+program execution defined in the paper. It is not a commercial product, and it is not connected with
+ZeroTier, Inc. or its VPN and SDN networking products; the authors have no relation to that company.
