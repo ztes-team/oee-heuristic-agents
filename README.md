@@ -120,7 +120,8 @@ witness and the replay commands.
 
 Every clause of a CNF formula is an abstraction, and its criterion is the authority over that
 clause alone. The formula is then the composite criterion τ = τ₁ ∧ … ∧ τₘ of evolutive consensus in
-the sense of the FUEE paper (Section 8, [doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)).
+the sense of the FUEE paper (Section 8; DOI 10.2298/FUEE2604723R,
+[the article on the journal's site](https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966)).
 
 The search runs in rounds over the shared record:
 - each clause reports the literal it forces or its conflict;
@@ -204,8 +205,8 @@ admit any correct branch, the choice of branch being the active ontology's.
 
 `tests/test_sat4_ksat.py` checks sat4 beyond its instance, against all assignments. It runs the same
 trace for every k from 2 to 8 and checks the criteria on random k-CNF formulas. It also checks
-evolutive consensus in the sense of the FUEE paper (Section 8,
-[doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)): the composite criterion is the
+evolutive consensus in the sense of the FUEE paper (Section 8; DOI 10.2298/FUEE2604723R,
+[the article on the journal's site](https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966)): the composite criterion is the
 conjunction of the clause criteria over the shared record.
 
 `tests/test_ksat.py` checks ksat against definitions written in the test: all assignments, a DPLL

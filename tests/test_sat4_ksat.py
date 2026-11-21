@@ -10,7 +10,8 @@ of tests check this against all assignments, by definitions written here indepen
    record after an interruption at every event. Workers give the lineages of the agenda under
    random schedules and with workers killed.
 2. Evolutive consensus (Radenković et al., Facta Universitatis, Ser. Electronics and Energetics
-   39(4), 2026, Section 8, https://doi.org/10.2298/FUEE2604723R): the composite criterion
+   39(4), 2026, Section 8; DOI 10.2298/FUEE2604723R,
+   https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966): the composite criterion
    τ = τ₁ ∧ … ∧ τₘ, one τᵢ per clause, evaluated over the shared record. The witness criterion is
    that conjunction on the completions of the propagated retry, and consensus is constituted when
    a witness is admitted. With clauses on other variables added, a run either reaches consensus

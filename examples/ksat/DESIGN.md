@@ -2,7 +2,7 @@
 
 ## What the example shows
 
-A CNF formula $F = D_1 \land \dots \land D_m$ is lifted so that every clause is its own abstraction. The criterion $\tau_i$ of clause $D_i$ is the authority over that clause and nothing else. The composite criterion is the formula itself, $\tau = \tau_1 \land \dots \land \tau_m$, evaluated over the shared record. This is evolutive consensus in the sense of the FUEE paper (Section 8, [doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)). The record ends in one of two ways:
+A CNF formula $F = D_1 \land \dots \land D_m$ is lifted so that every clause is its own abstraction. The criterion $\tau_i$ of clause $D_i$ is the authority over that clause and nothing else. The composite criterion is the formula itself, $\tau = \tau_1 \land \dots \land \tau_m$, evaluated over the shared record. This is evolutive consensus in the sense of the FUEE paper (Section 8; DOI 10.2298/FUEE2604723R, [the article on the journal's site](https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966)). The record ends in one of two ways:
 
 - **Consensus (SAT).** Every clause abstraction admits a vote for the same total assignment. Voting is execution: each vote is an admission under $\tau_i$, and the consensus is the record itself.
 - **Refutation (UNSAT).** The empty clause is learned. Every learned clause carries a resolution derivation that its criterion checked, so the record contains a resolution refutation of $F$. The replay checks it again in both modes. Non-convergence is then not only observable: it is certified.

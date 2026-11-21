@@ -11,10 +11,13 @@
     {"name": "Radenković, Božidar", "affiliation": "University of Belgrade, FON", "orcid": "0000-0003-2111-7788"}
   ],
   "keywords": ["execution calculus", "metaheuristics", "variable neighborhood search", "travelling salesman problem", "SAT", "clause learning", "evolutive consensus", "replay"],
+  "references": [
+    "Radenković, M., Radosavljević, N., Labus, A., Prokhorov, S., Radenković, B. (2026). Evolutive consensus for agentic AI: OEE incompleteness of external guardrails and the execution calculus for safe evolutive agents. Facta Universitatis, Series: Electronics and Energetics, 39(4), 723-765. DOI 10.2298/FUEE2604723R"
+  ],
   "related_identifiers": [
     {"identifier": "https://github.com/ztes-team/ztes-minimal/tree/v0.1.0", "relation": "requires", "resource_type": "software"},
     {"identifier": "10.20944/preprints202608.1545.v3", "relation": "references", "resource_type": "publication-preprint"},
     {"identifier": "10.3390/systems14050547", "relation": "references", "resource_type": "publication-article"},
-    {"identifier": "10.2298/FUEE2604723R", "relation": "references", "resource_type": "publication-article"}
+    {"identifier": "https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966", "relation": "references", "resource_type": "publication-article"}
   ]
 }
