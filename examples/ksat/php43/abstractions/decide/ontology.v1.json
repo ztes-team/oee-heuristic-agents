@@ -1,0 +1,16 @@
+{
+  "note": "policy v1 by occurrence; waits while a change of policy is due and not decided",
+  "inputs": {
+    "context": [
+      "frame",
+      "decision",
+      "learned",
+      "learn_count",
+      "switches"
+    ]
+  },
+  "returns": "Decision",
+  "body": {
+    "result": "propose_decision(NAMES, CLAUSES, VARIABLES, latest(frame), latest(decision), learned, learn_count >= AFTER and not switches)"
+  }
+}

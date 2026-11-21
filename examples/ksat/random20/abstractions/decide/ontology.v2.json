@@ -1,0 +1,14 @@
+{
+  "note": "policy v2 by conflict activity, carried by adapt",
+  "inputs": {
+    "context": [
+      "frame",
+      "decision",
+      "learned"
+    ]
+  },
+  "returns": "Decision",
+  "body": {
+    "result": "propose_decision_by_activity(NAMES, CLAUSES, VARIABLES, latest(frame), latest(decision), learned)"
+  }
+}

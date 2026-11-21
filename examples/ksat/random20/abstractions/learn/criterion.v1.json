@@ -1,0 +1,28 @@
+{
+  "note": "a resolution derivation from known clauses, carrying exactly its abstraction and round",
+  "constants": {
+    "TEMPLATES": {
+      "$specifications": [
+        "c1/criterion.v1",
+        "c1/ontology.v1",
+        "round/criterion.v1",
+        "round/ontology.v1"
+      ]
+    }
+  },
+  "inputs": {
+    "context": [
+      "frame",
+      "last_learned",
+      "learned",
+      "learn_count"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Learned"
+    }
+  },
+  "body": {
+    "result": "check_learned(NAMES, CLAUSES, latest(frame), latest(last_learned), learned, learn_count, TEMPLATES, w)"
+  }
+}

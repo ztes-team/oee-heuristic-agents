@@ -1,0 +1,17 @@
+{
+  "note": "SAT: every clause of the formula voted for a model; UNSAT: the empty clause was learned",
+  "inputs": {
+    "context": [
+      "frame",
+      "learned",
+      "verdicts"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Verdict"
+    }
+  },
+  "body": {
+    "result": "check_verdict(FORMULA, VARIABLES, NAMES, latest(frame), learned, verdicts, w)"
+  }
+}

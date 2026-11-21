@@ -1,0 +1,19 @@
+{
+  "note": "the frame is the function of the record that defines it: round chooses nothing",
+  "inputs": {
+    "context": [
+      "frame",
+      "said",
+      "decision",
+      "last_learned",
+      "learned"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Frame"
+    }
+  },
+  "body": {
+    "result": "w == next_frame(NAMES, CLAUSES, VARIABLES, latest(frame), said, latest(decision), latest(last_learned), learned)"
+  }
+}

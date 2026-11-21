@@ -1,0 +1,23 @@
+{
+  "note": "the authority over the policy: once, on the evidence of AFTER admitted conflicts",
+  "constants": {
+    "UPGRADE": {
+      "$specifications": [
+        "decide/ontology.v2"
+      ]
+    }
+  },
+  "inputs": {
+    "context": [
+      "learn_count",
+      "switches"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Adaptation"
+    }
+  },
+  "body": {
+    "result": "check_switch(AFTER, learn_count, switches, UPGRADE, w)"
+  }
+}

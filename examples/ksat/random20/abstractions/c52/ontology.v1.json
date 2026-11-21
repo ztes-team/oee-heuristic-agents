@@ -1,0 +1,13 @@
+{
+  "note": "the unit, conflict or vote of the clause on the latest frame",
+  "inputs": {
+    "context": [
+      "frame",
+      "mine"
+    ]
+  },
+  "returns": "Speech",
+  "body": {
+    "result": "propose_speech(NAME, CLAUSE, latest(frame), latest(mine))"
+  }
+}

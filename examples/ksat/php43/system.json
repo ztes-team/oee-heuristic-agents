@@ -1,0 +1,468 @@
+{
+  "system": "ksat-php43",
+  "title": "PHP(4,3): 12 variables, 22 clauses as abstractions",
+  "abstractions": [
+    "round",
+    "decide",
+    "learn",
+    "adapt",
+    "verdict",
+    "c1",
+    "c2",
+    "c3",
+    "c4",
+    "c5",
+    "c6",
+    "c7",
+    "c8",
+    "c9",
+    "c10",
+    "c11",
+    "c12",
+    "c13",
+    "c14",
+    "c15",
+    "c16",
+    "c17",
+    "c18",
+    "c19",
+    "c20",
+    "c21",
+    "c22"
+  ],
+  "constants": {
+    "VARIABLES": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "FORMULA": [
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        4,
+        5,
+        6
+      ],
+      [
+        7,
+        8,
+        9
+      ],
+      [
+        10,
+        11,
+        12
+      ],
+      [
+        -1,
+        -4
+      ],
+      [
+        -1,
+        -7
+      ],
+      [
+        -1,
+        -10
+      ],
+      [
+        -4,
+        -7
+      ],
+      [
+        -4,
+        -10
+      ],
+      [
+        -7,
+        -10
+      ],
+      [
+        -2,
+        -5
+      ],
+      [
+        -2,
+        -8
+      ],
+      [
+        -2,
+        -11
+      ],
+      [
+        -5,
+        -8
+      ],
+      [
+        -5,
+        -11
+      ],
+      [
+        -8,
+        -11
+      ],
+      [
+        -3,
+        -6
+      ],
+      [
+        -3,
+        -9
+      ],
+      [
+        -3,
+        -12
+      ],
+      [
+        -6,
+        -9
+      ],
+      [
+        -6,
+        -12
+      ],
+      [
+        -9,
+        -12
+      ]
+    ],
+    "NAMES": [
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7",
+      "c8",
+      "c9",
+      "c10",
+      "c11",
+      "c12",
+      "c13",
+      "c14",
+      "c15",
+      "c16",
+      "c17",
+      "c18",
+      "c19",
+      "c20",
+      "c21",
+      "c22"
+    ],
+    "CLAUSES": {
+      "c1": [
+        1,
+        2,
+        3
+      ],
+      "c2": [
+        4,
+        5,
+        6
+      ],
+      "c3": [
+        7,
+        8,
+        9
+      ],
+      "c4": [
+        10,
+        11,
+        12
+      ],
+      "c5": [
+        -1,
+        -4
+      ],
+      "c6": [
+        -1,
+        -7
+      ],
+      "c7": [
+        -1,
+        -10
+      ],
+      "c8": [
+        -4,
+        -7
+      ],
+      "c9": [
+        -4,
+        -10
+      ],
+      "c10": [
+        -7,
+        -10
+      ],
+      "c11": [
+        -2,
+        -5
+      ],
+      "c12": [
+        -2,
+        -8
+      ],
+      "c13": [
+        -2,
+        -11
+      ],
+      "c14": [
+        -5,
+        -8
+      ],
+      "c15": [
+        -5,
+        -11
+      ],
+      "c16": [
+        -8,
+        -11
+      ],
+      "c17": [
+        -3,
+        -6
+      ],
+      "c18": [
+        -3,
+        -9
+      ],
+      "c19": [
+        -3,
+        -12
+      ],
+      "c20": [
+        -6,
+        -9
+      ],
+      "c21": [
+        -6,
+        -12
+      ],
+      "c22": [
+        -9,
+        -12
+      ]
+    },
+    "AFTER": 3
+  },
+  "types": {
+    "Step": {
+      "record": {
+        "literal": "integer",
+        "level": "integer",
+        "reason": "text"
+      }
+    },
+    "Frame": {
+      "record": {
+        "epoch": "integer",
+        "round": "integer",
+        "level": "integer",
+        "trail": {
+          "list": "Step"
+        },
+        "conflicts": {
+          "list": "text"
+        },
+        "votes": {
+          "list": "text"
+        },
+        "quiet": "boolean",
+        "total": "boolean"
+      }
+    },
+    "Speech": {
+      "record": {
+        "clause": "text",
+        "round": "integer",
+        "kind": "text",
+        "literal": "integer"
+      }
+    },
+    "Decision": {
+      "record": {
+        "round": "integer",
+        "literals": {
+          "list": "integer"
+        }
+      }
+    },
+    "Resolution": {
+      "record": {
+        "clause": "text",
+        "literal": "integer"
+      }
+    },
+    "Learned": {
+      "record": {
+        "round": "integer",
+        "name": "text",
+        "start": "text",
+        "chain": {
+          "list": "Resolution"
+        },
+        "literals": {
+          "list": "integer"
+        },
+        "level": "integer",
+        "specifications": {
+          "list": "specification"
+        }
+      }
+    },
+    "Adaptation": {
+      "record": {
+        "conflicts": "integer",
+        "specifications": {
+          "list": "specification"
+        }
+      }
+    },
+    "Verdict": {
+      "record": {
+        "sat": "boolean",
+        "model": {
+          "list": "integer"
+        }
+      }
+    }
+  },
+  "bindings": {
+    "frame": {
+      "from": "round",
+      "select": "all",
+      "window": 1,
+      "type": "Frame",
+      "note": "the latest frame, as a list of at most one (latest() reads it)"
+    },
+    "mine": {
+      "from": "$self",
+      "select": "all",
+      "window": 1,
+      "type": "Speech",
+      "note": "the last speech of this clause"
+    },
+    "said": {
+      "from": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9",
+        "c10",
+        "c11",
+        "c12",
+        "c13",
+        "c14",
+        "c15",
+        "c16",
+        "c17",
+        "c18",
+        "c19",
+        "c20",
+        "c21",
+        "c22"
+      ],
+      "select": "map",
+      "type": "Speech",
+      "key": "[x['round'], x['clause']]",
+      "note": "every speech by (round, clause); a learned clause extends the lineages read"
+    },
+    "decision": {
+      "from": "decide",
+      "select": "all",
+      "window": 1,
+      "type": "Decision"
+    },
+    "last_learned": {
+      "from": "learn",
+      "select": "all",
+      "window": 1,
+      "type": "Learned"
+    },
+    "learned": {
+      "from": "learn",
+      "select": "map",
+      "type": "Learned",
+      "key": "x['name']",
+      "value": "x['literals']",
+      "note": "name → literals of every learned clause, in the order of learning"
+    },
+    "learn_count": {
+      "from": "learn",
+      "select": "count"
+    },
+    "switches": {
+      "from": "adapt",
+      "select": "count"
+    },
+    "verdicts": {
+      "from": "verdict",
+      "select": "count"
+    }
+  },
+  "admission_limit": 1000000,
+  "expect": {
+    "events": 174,
+    "states": {
+      "round": "wait",
+      "decide": "wait",
+      "learn": "wait",
+      "adapt": "wait",
+      "verdict": "wait",
+      "c1": "wait",
+      "c2": "wait",
+      "c3": "wait",
+      "c4": "wait",
+      "c5": "wait",
+      "c6": "wait",
+      "c7": "wait",
+      "c8": "wait",
+      "c9": "wait",
+      "c10": "wait",
+      "c11": "wait",
+      "c12": "wait",
+      "c13": "wait",
+      "c14": "wait",
+      "c15": "wait",
+      "c16": "wait",
+      "c17": "wait",
+      "c18": "wait",
+      "c19": "wait",
+      "c20": "wait",
+      "c21": "wait",
+      "c22": "wait",
+      "l1": "wait",
+      "l2": "wait",
+      "l3": "wait",
+      "l4": "wait",
+      "l5": "wait"
+    },
+    "values": {
+      "verdict": [
+        {
+          "sat": false,
+          "model": []
+        }
+      ]
+    }
+  }
+}

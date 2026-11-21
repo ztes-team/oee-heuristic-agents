@@ -1,0 +1,13 @@
+# Configuration for the ksat systems run from the command line with --workers:
+#   python -m ztes run examples/ksat/random20 --workers --config examples/ksat/ztes.yaml
+# One process runs one worker per abstraction, about ninety for random20. On the disk store,
+# the default, every worker polls the shared record, and with this many workers that dominates
+# the run: random20 does not finish within the default timeout of the coordinator (60 s). The
+# record is kept in memory instead, and the coordinator may wait longer. Nothing here changes
+# the record: the same system gives the same events under every configuration.
+
+store:
+  backend: memory
+
+execution:
+  timeout: 600.0

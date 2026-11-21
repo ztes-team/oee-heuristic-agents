@@ -19,6 +19,7 @@ in its directory, as JSON specifications and one `lib.py` of bounded functions.
 | [`vns-adaptive`](examples/vns-adaptive/DESIGN.md) | the searchers of `vns` and an agent that changes their form during the run | 6 | 393 | an adaptive heuristic agent: after every round it reads the returns in the record and, past a tolerance, carries the next form of the searchers, first a change of ontology, then of criterion; its criterion is the authority over what may change and on what evidence; every change is in force from the start of a round under every schedule, and replays |
 | [`cptl`](examples/cptl/DESIGN.md) | parity and a strict budget along a path with declared precedence | 3 | 21 | a locally valid trial has a certified obstruction in the next stage. A governed change uses the recorded two-state suffix certificates to build an optimum. A native dynamic program and flat sampling supply comparisons. |
 | [`sat4`](examples/sat4/DESIGN.md) | propagation and resolution on two 4-CNF clauses | 6 | 21 | a conflict closes one branch. A checked resolvent is reused after a governed change and forces a literal in the retry. |
+| [`ksat`](examples/ksat/DESIGN.md) | conflict-driven clause learning on any CNF formula, every clause an abstraction: PHP(4,3) and a random 3-CNF with 20 variables | 5 and one per clause (32 and 96 at the end) | 174 and 460 | evolutive consensus: the clauses vote for a model by their own admissions, or the record ends in a checked resolution refutation; every learned clause is brought in as a new abstraction under governance, and an agent changes the decision policy on the evidence of the conflicts; the same record under every schedule |
 
 ## vns: variable neighborhood search by cooperating searchers
 
@@ -115,6 +116,24 @@ checks a resolution proof from the original clauses, and reuses the derived clau
 retry. The [design](examples/sat4/DESIGN.md) gives the evidence for each decision, the expected SAT
 witness and the replay commands.
 
+## ksat: k-SAT as evolutive consensus
+
+Every clause of a CNF formula is an abstraction, and its criterion is the authority over that
+clause alone. The formula is then the composite criterion τ = τ₁ ∧ … ∧ τₘ of evolutive consensus in
+the sense of the FUEE paper (Section 8, [doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)).
+
+The search runs in rounds over the shared record:
+- each clause reports the literal it forces or its conflict;
+- `decide` branches;
+- `learn` derives a clause by resolution and brings it in as a new abstraction, together with a
+  new version of `round` that reads it;
+- `adapt` changes the decision policy once, on the evidence of the conflicts.
+
+A model is admitted only when every clause has voted for it, each vote an admission under its own
+criterion. Otherwise the record ends in a resolution refutation, checked at every step and again by
+replay. `scripts/ksat_system.py` writes the system of any DIMACS formula, and the
+[design](examples/ksat/DESIGN.md) gives the abstractions, the criteria and the measurements.
+
 ## Running
 
 Python 3.12 or later.
@@ -133,6 +152,11 @@ python -m ztes run examples/vns-adaptive
 python -m ztes run examples/cptl
 python -m ztes run examples/sat4
 python scripts/benchmark_cptl.py               # native DP, flat samples and checked OEE runs
+python -m ztes run examples/ksat/php43         # UNSAT: a refutation, five clauses brought in
+python -m ztes run examples/ksat/random20 --workers --config examples/ksat/ztes.yaml
+                                              # about ninety workers; the record in memory
+python scripts/ksat_system.py formula.cnf DIR  # the ksat system of any DIMACS formula
+python scripts/benchmark_ksat.py               # native and checked runs, replay, record size
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
@@ -182,6 +206,10 @@ trace for every k from 2 to 8 and checks the criteria on random k-CNF formulas. 
 evolutive consensus in the sense of the FUEE paper (Section 8,
 [doi:10.2298/FUEE2604723R](https://doi.org/10.2298/FUEE2604723R)): the composite criterion is the
 conjunction of the clause criteria over the shared record.
+
+`tests/test_ksat.py` checks ksat against definitions written in the test: all assignments, a DPLL
+procedure and a checker of resolution proofs. It also checks that the record is the native
+execution of the same relations.
 
 | Test | What it checks |
 |---|---|
@@ -241,6 +269,16 @@ conjunction of the clause criteria over the shared record.
 | `test_the_helpers_refuse_what_this_instance_cannot_show` (sat4) | on small inputs: a satisfied clause forces nothing, a tautology or parents without a clash give no resolvent, a witness that falsifies a clause is refused |
 | `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_under_random_schedules_and_killed_workers` (sat4) | the checks applied to every example, with an interruption after every event |
 | `test_until_the_first_change_the_searchers_take_the_steps_of_vns`, `test_an_agent_whose_tolerance_is_never_exceeded_leaves_the_search_of_vns` (vns-adaptive) | the agent changes nothing it does not carry |
+| `test_the_committed_instances_are_what_the_script_writes`, `…_meet_their_expected_end_and_replay`, `test_workers_meet_the_expected_end_of_the_committed_instances` (ksat) | php43 and random20 as `scripts/ksat_system.py` writes them; their expected end under the agenda and by workers; both replay modes |
+| `test_verdicts_agree_with_all_assignments`, `test_edge_cases`, `test_verdicts_agree_with_dpll_on_larger_formulas` (ksat) | random k-CNF, k = 2..5, below, at and above the threshold, against all assignments; edge cases; n = 20..30 against DPLL. A SAT verdict is a model; an UNSAT verdict ends a refutation the checker accepts; every learned clause holds in every model |
+| `test_the_record_is_the_native_execution_of_the_same_relations` (ksat) | the frames, decisions, learned clauses and verdict of the helpers called in a plain loop, with and without the change of policy |
+| `test_consensus_is_the_conjunction_of_the_clause_criteria`, `test_a_clause_votes_only_for_a_total_frame_that_satisfies_it` (ksat) | every clause abstraction voted under its own τᵢ; on all assignments, the verdict admits exactly the model every clause voted for; a missing vote, or a vote of a false clause or on a frame that is not total, is refused |
+| `test_the_refutation_is_in_the_record_and_replay_finds_a_forged_step` (ksat) | the refutation of PHP(4,3) passes the checker; a forged step fails replay at that event in both modes |
+| `test_a_learned_clause_brings_in_its_abstraction_and_the_next_round`, `test_tau_root_and_learn_refuse_what_is_not_exact` (ksat) | each learned clause carries its abstraction and the next version of round, active from its event; the next frame is made by that version and the clause speaks first on the new epoch; a version with a gap, an ontology without its criterion and inexact specifications are refused |
+| `test_adapt_puts_the_second_policy_in_force_at_its_event`, `test_the_change_of_policy_changes_the_course_and_not_the_verdict` (ksat) | every decision after the change is by version 2, all judged by one criterion; version 1 waits while the change is due; false evidence, an early or second change and another version are refused; the course changes, the verdict does not |
+| `test_an_interrupted_run_continues_to_the_same_record`, `test_the_same_lineages_under_random_schedules_and_killed_workers` (ksat) | the checks applied to every example, with the workers of learned clauses killed too |
+| `test_the_criterion_of_learn_refuses_what_is_not_a_resolution_from_a_conflict`, `test_decide_waits_while_a_change_of_policy_is_due` (ksat) | forged derivations that differ from a valid one only in the broken rule (start, parent, clash, tautology) are refused; with the change of policy due and an adapt that never decides, decide makes no decision |
+| `test_the_clause_criteria_refuse_a_false_or_untimely_speech`, `test_the_criterion_of_decide_admits_any_correct_decision_and_nothing_else`, `test_the_criterion_of_learn_admits_any_valid_derivation_and_nothing_else`, `test_the_criteria_of_round_and_verdict_refuse_a_forged_frame_or_verdict` (ksat) | the criteria as authorities (D2): any correct decision and any valid derivation is admitted; forged speeches, decisions, derivations, frames and verdicts are refused |
 
 ## License
 

@@ -1,0 +1,14 @@
+{
+  "note": "the consensus or the refutation, once",
+  "inputs": {
+    "context": [
+      "frame",
+      "learned",
+      "verdicts"
+    ]
+  },
+  "returns": "Verdict",
+  "body": {
+    "result": "propose_verdict(latest(frame), learned, verdicts)"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "note": "1-UIP analysis; a non-empty clause brings in its abstraction and the next version of round",
+  "constants": {
+    "TEMPLATES": {
+      "$specifications": [
+        "c1/criterion.v1",
+        "c1/ontology.v1",
+        "round/criterion.v1",
+        "round/ontology.v1"
+      ]
+    }
+  },
+  "inputs": {
+    "context": [
+      "frame",
+      "last_learned",
+      "learned",
+      "learn_count"
+    ]
+  },
+  "returns": "Learned",
+  "body": {
+    "result": "propose_learned(NAMES, CLAUSES, latest(frame), latest(last_learned), learned, learn_count, TEMPLATES)"
+  }
+}

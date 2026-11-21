@@ -1,0 +1,20 @@
+{
+  "note": "carry decide/ontology.v2 once AFTER clauses are learned",
+  "constants": {
+    "UPGRADE": {
+      "$specifications": [
+        "decide/ontology.v2"
+      ]
+    }
+  },
+  "inputs": {
+    "context": [
+      "learn_count",
+      "switches"
+    ]
+  },
+  "returns": "Adaptation",
+  "body": {
+    "result": "propose_switch(AFTER, learn_count, switches, UPGRADE)"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "note": "any consistent decision on unassigned variables when one is due (D2)",
+  "inputs": {
+    "context": [
+      "frame",
+      "decision"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Decision"
+    }
+  },
+  "body": {
+    "result": "check_decision(VARIABLES, latest(frame), latest(decision), w)"
+  }
+}

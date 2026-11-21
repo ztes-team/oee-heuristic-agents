@@ -1,0 +1,16 @@
+{
+  "note": "τᵢ: what the clause says about the frame is true of the clause",
+  "inputs": {
+    "context": [
+      "frame",
+      "mine"
+    ],
+    "candidate": {
+      "name": "w",
+      "type": "Speech"
+    }
+  },
+  "body": {
+    "result": "check_speech(NAME, CLAUSE, latest(frame), latest(mine), w)"
+  }
+}

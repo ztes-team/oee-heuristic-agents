@@ -1,0 +1,16 @@
+{
+  "note": "the next frame once every expected speech, decision or learned clause is recorded",
+  "inputs": {
+    "context": [
+      "frame",
+      "said",
+      "decision",
+      "last_learned",
+      "learned"
+    ]
+  },
+  "returns": "Frame",
+  "body": {
+    "result": "next_frame(NAMES, CLAUSES, VARIABLES, latest(frame), said, latest(decision), latest(last_learned), learned)"
+  }
+}
