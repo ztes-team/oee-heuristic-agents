@@ -144,9 +144,9 @@ python -m ztes run examples/vns               # under the agenda: the report, R2
 python -m ztes run examples/vns --workers     # phase 3 by one worker per abstraction
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
 python -m ztes run examples/vns-atsp
-python -m ztes run examples/vns-tw         # about 6 s, and as long for R2
+python -m ztes run examples/vns-tw         # about 7 s, and as long for R2
 python -m ztes run examples/vns-tw --record DIR && python -m ztes verify DIR --judgments
-                                              # R2 by re-judging the recorded steps only: 0.6 s
+                                              # R2 by re-judging the recorded steps only: 0.65 s
 python -m ztes run examples/vns-hk
 python -m ztes run examples/vns-adaptive
 python -m ztes run examples/cptl
@@ -157,6 +157,7 @@ python -m ztes run examples/ksat/random20 --workers --config examples/ksat/ztes.
                                               # about ninety workers; the record in memory
 python scripts/ksat_system.py formula.cnf DIR  # the ksat system of any DIMACS formula
 python scripts/benchmark_ksat.py               # native and checked runs, replay, record size
+python scripts/timings.py                      # run and both replays of every example, medians of three
 python -m pytest
 python scripts/profiles.py                    # the KPI profiles of every form, about two minutes
 ```
