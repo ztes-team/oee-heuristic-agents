@@ -1,0 +1,20 @@
+{
+  "title": "OEE heuristic agents: lifted heuristic search and k-SAT on the zero-tier execution substrate",
+  "upload_type": "software",
+  "license": "mit",
+  "version": "1.0.0",
+  "description": "Heuristic agents lifted into the OEE calculus of execution and run on ZTES, the minimal zero-tier execution substrate: every step of a method is a candidate proposed by an ontology, admitted by a criterion and appended to one record, and every run replays. Eight examples: cooperative variable neighborhood search on fri26 and on the asymmetric ftv38, with time windows and precedence under a recorded environment, with Held-Karp city abstractions that prove the incumbent optimal, and with an adaptive agent that changes the form of the searchers; a causal parity-threshold lock (CPTL) with a native dynamic program for comparison; a two-clause resolution trace (sat4); and conflict-driven clause learning on any CNF formula as evolutive consensus, every clause an abstraction and every learned clause a new abstraction brought in under governance (ksat). Scripts reproduce the measurements: KPI profiles, execution and replay times, and native comparisons. Executable supplement to a paper in preparation.",
+  "creators": [
+    {"name": "Radenković, Miloš", "affiliation": "School of Computing, Union University, Belgrade", "orcid": "0000-0002-1708-9799"},
+    {"name": "Prokhorov, Sergei", "affiliation": "S.I. Vavilov Institute for the History of Science and Technology, Russian Academy of Sciences, Moscow", "orcid": "0000-0002-1874-8602"},
+    {"name": "Labus, Aleksandra", "affiliation": "University of Belgrade, FON", "orcid": "0000-0002-7716-5845"},
+    {"name": "Radenković, Božidar", "affiliation": "University of Belgrade, FON", "orcid": "0000-0003-2111-7788"}
+  ],
+  "keywords": ["execution calculus", "metaheuristics", "variable neighborhood search", "travelling salesman problem", "SAT", "clause learning", "evolutive consensus", "replay"],
+  "related_identifiers": [
+    {"identifier": "https://github.com/ztes-team/ztes-minimal/tree/v0.1.0", "relation": "requires", "resource_type": "software"},
+    {"identifier": "10.20944/preprints202608.1545.v3", "relation": "references", "resource_type": "publication-preprint"},
+    {"identifier": "10.3390/systems14050547", "relation": "references", "resource_type": "publication-article"},
+    {"identifier": "10.2298/FUEE2604723R", "relation": "references", "resource_type": "publication-article"}
+  ]
+}

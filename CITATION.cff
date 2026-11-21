@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "OEE heuristic agents: lifted heuristic search and k-SAT on the zero-tier execution substrate"
+type: software
+version: 1.0.0
+date-released: 2026-11-21
+license: MIT
+repository-code: "https://github.com/ztes-team/oee-heuristic-agents"
+authors:
+  - family-names: "Radenković"
+    given-names: "Miloš"
+    affiliation: "School of Computing, Union University, Belgrade"
+    orcid: "https://orcid.org/0000-0002-1708-9799"
+  - family-names: "Prokhorov"
+    given-names: "Sergei"
+    affiliation: "S.I. Vavilov Institute for the History of Science and Technology, Russian Academy of Sciences, Moscow"
+    orcid: "https://orcid.org/0000-0002-1874-8602"
+  - family-names: "Labus"
+    given-names: "Aleksandra"
+    affiliation: "University of Belgrade, FON"
+    orcid: "https://orcid.org/0000-0002-7716-5845"
+  - family-names: "Radenković"
+    given-names: "Božidar"
+    affiliation: "University of Belgrade, FON"
+    orcid: "https://orcid.org/0000-0003-2111-7788"
+abstract: >-
+  Heuristic agents lifted into the OEE calculus of execution and run on ZTES: every step of a
+  method is a candidate proposed by an ontology, admitted by a criterion and appended to one
+  record, and every run replays. Cooperative variable neighborhood search on the travelling
+  salesman problem, an adaptive agent, an exact reference (CPTL) and k-SAT as evolutive consensus.
+  Executable supplement to a paper in preparation.
+keywords: [execution calculus, metaheuristics, variable neighborhood search, travelling salesman problem, SAT, clause learning, evolutive consensus, replay]
+references:
+  - type: software
+    title: "ZTES: a minimal Zero Tier Execution Substrate for the OEE calculus"
+    authors:
+      - {family-names: "Radenković", given-names: "Miloš"}
+      - {family-names: "Prokhorov", given-names: "Sergei"}
+      - {family-names: "Labus", given-names: "Aleksandra"}
+      - {family-names: "Radenković", given-names: "Božidar"}
+    version: 0.1.0
+    repository-code: "https://github.com/ztes-team/ztes-minimal"
+  - type: article
+    title: "A Calculus of Execution for Systems of Interacting Binary Relations"
+    authors:
+      - {family-names: "Škarić", given-names: "Milan"}
+      - {family-names: "Ivanović", given-names: "Aleksandar"}
+      - {family-names: "Radenković", given-names: "Miloš"}
+      - {family-names: "Prokhorov", given-names: "Sergei"}
+      - {family-names: "Labus", given-names: "Aleksandra"}
+      - {family-names: "Radenković", given-names: "Božidar"}
+    journal: "Preprints"
+    year: 2026
+    doi: "10.20944/preprints202608.1545.v3"
+  - type: article
+    title: "Evolutive consensus for agentic AI: OEE incompleteness of external guardrails and the execution calculus for safe evolutive agents"
+    authors:
+      - {family-names: "Radenković", given-names: "Miloš"}
+      - {family-names: "Radosavljević", given-names: "N."}
+      - {family-names: "Labus", given-names: "Aleksandra"}
+      - {family-names: "Prokhorov", given-names: "Sergei"}
+      - {family-names: "Radenković", given-names: "Božidar"}
+    journal: "Facta Universitatis, Series: Electronics and Energetics"
+    year: 2026
+    volume: 39
+    start: 723
+    end: 765
+    doi: "10.2298/FUEE2604723R"
