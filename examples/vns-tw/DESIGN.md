@@ -109,9 +109,10 @@ Measured in ZTES with the chance constraint:
   schedules (27 runs, every record replayed): the schedule changed the final tour in 5 of the 9
   combinations of draw and world. Of the variance of the final length, the algorithm explains
   25 %, the environment 6 %, the schedule 9 %, and their interactions 60 % (a 3 × 3 × 3 design:
-  indicative only); a later execution of `python scripts/trials.py tw` (draw seeds 1–3, world seeds
-  11–13, schedules 1–3) gave again 5 of 9, and 23 %, 9 %, 8 % and 60 %. Here the measure over
-  schedules is the one posited by the random pauses, and the shares vary from execution to execution.
+  indicative only); later executions of `python scripts/trials.py tw` (draw seeds 1–3, world seeds
+  11–13, schedules 1–3) gave 5 of 9 with 23 %, 9 %, 8 % and 60 %, and, on ZTES 0.1.1, 4 of 9 with
+  23 %, 23 %, 0 % and 54 %. Here the measure over schedules is the one posited by the random pauses,
+  whose interleaving the operating system decides, and the shares vary from execution to execution.
 
 ## 5. The forms and what they show
 

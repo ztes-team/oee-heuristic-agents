@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "OEE heuristic agents: lifted heuristic search and k-SAT on the zero-tier execution substrate"
 type: software
-version: 1.0.1
-date-released: 2026-11-21
+version: 1.0.2
+date-released: 2026-11-26
 doi: "10.5281/zenodo.24416246"
 identifiers:
   - type: doi
@@ -51,8 +51,8 @@ references:
       - {family-names: "Prokhorov", given-names: "Sergei"}
       - {family-names: "Labus", given-names: "Aleksandra"}
       - {family-names: "Radenković", given-names: "Božidar"}
-    version: 0.1.0
-    doi: "10.5281/zenodo.24416120"
+    version: 0.1.1
+    doi: "10.5281/zenodo.24563789"
     repository-code: "https://github.com/ztes-team/ztes-minimal"
   - type: article
     title: "A Calculus of Execution for Interacting Binary Relations"

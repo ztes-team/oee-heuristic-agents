@@ -13,16 +13,16 @@ This repository is the executable supplement of two papers.
 
 The examples of the base paper that run without heuristics (√2, the Dedekind cut, prime witnesses,
 factorization, the payment, exact TSP, the ant colony and the eight defects) are reproduced in
-[ztes-minimal](https://github.com/ztes-team/ztes-minimal/blob/main/REPRODUCING.md).
+[ztes-minimal](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/REPRODUCING.md).
 
 ```bash
-pip install -r requirements.txt          # Python 3.12 or later; ZTES at the commit the examples were checked with
+pip install -r requirements.txt          # Python 3.12 or later; ZTES v0.1.1, the release the examples were checked with
 python -m pytest -q                      # every check below, in about seven minutes
 ```
 
 Every `run` ends with `R2  replay of N events: OK` (the whole record replayed from the empty prefix)
 and `Expect  OK` (the end stated in `system.json` holds). The terms of the output are those of
-ZTES; [its glossary](https://github.com/ztes-team/ztes-minimal/blob/main/docs/glossary.md) gives
+ZTES; [its glossary](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/glossary.md) gives
 them next to the terms of the papers. In particular, the output prints Not Yet for an invocation
 that gave no candidate, which the base paper calls Pending.
 

@@ -49,11 +49,11 @@ repository, the command that produces it and the test that checks it.
 The examples are systems for [ZTES](https://github.com/ztes-team/ztes-minimal), and their output is
 that of ZTES. If the calculus is new to you, read first, in ztes-minimal:
 
-* [`docs/tour.md`](https://github.com/ztes-team/ztes-minimal/blob/main/docs/tour.md): one invocation
+* [`docs/tour.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/tour.md): one invocation
   from start to finish, the base paper mapped to the code;
-* [`docs/glossary.md`](https://github.com/ztes-team/ztes-minimal/blob/main/docs/glossary.md): the
+* [`docs/glossary.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/glossary.md): the
   terms of the papers next to those of the output;
-* [`docs/writing-a-system.md`](https://github.com/ztes-team/ztes-minimal/blob/main/docs/writing-a-system.md):
+* [`docs/writing-a-system.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/writing-a-system.md):
   the files of an abstraction, which every example here follows.
 
 Eight terms are enough to read this page:
@@ -80,7 +80,7 @@ tests/                    the checks of every example and of the scripts (docs/t
 REPRODUCING.md            every result of both papers: command, output, test
 CHANGELOG.md              what changed between versions
 docs/tests.md             what each test shows
-requirements.txt          ZTES at the commit the examples were checked with
+requirements.txt          ZTES v0.1.1, the release the examples were checked with
 ```
 
 ## vns: variable neighborhood search by cooperating searchers
@@ -202,7 +202,7 @@ replay. `scripts/ksat_system.py` writes the system of any DIMACS formula, and th
 Python 3.12 or later.
 
 ```
-pip install -r requirements.txt               # ZTES from GitHub, at the commit the examples were checked with
+pip install -r requirements.txt               # ZTES v0.1.1 from GitHub, the release the examples were checked with
 python -m ztes run examples/vns               # under the agenda: the report, R2 and the expected end
 python -m ztes run examples/vns --workers     # phase 3 by one worker per abstraction
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
@@ -281,7 +281,7 @@ result of the papers.
 2. Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. *Observable, Governable, Cooperative:
    Execution Analytics and Adaptive Heuristic Agents in the OEE Calculus*. In preparation.
 3. Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. *ZTES: a minimal Zero Tier Execution
-   Substrate for the OEE calculus*, software, Zenodo, 2026. https://doi.org/10.5281/zenodo.24416120
+   Substrate for the OEE calculus*, software, version 0.1.1, Zenodo, 2026. https://doi.org/10.5281/zenodo.24563789
 4. Ivanović, A.; Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. Zero Tier Execution
    Substrate for Evolutionary Software Systems. *Systems* **2026**, 14, 547.
    https://doi.org/10.3390/systems14050547

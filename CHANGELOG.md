@@ -5,10 +5,11 @@ for Interacting Binary Relations* (https://doi.org/10.20944/preprints202608.1545
 paper, *Observable, Governable, Cooperative: Execution Analytics and Adaptive Heuristic Agents in the
 OEE Calculus*, is in preparation and is named by its title only.
 
-## Unreleased (1.0.2)
+## 1.0.2 (2026-11-26)
 
 No example and no record changed: the same plans give the same records, and the same checks pass.
-What changed is how the repository refers to the two papers, and the documentation.
+What changed is the version of ZTES, how the repository refers to the two papers, and the
+documentation.
 
 **The papers**
 * The README names both papers in a new section, "The two papers": the base paper by its new title
@@ -31,11 +32,16 @@ What changed is how the repository refers to the two papers, and the documentati
   and "References". The table of tests moved to `docs/tests.md`.
 * `ksat`, PHP(4,3): six clauses are learned and the sixth is the empty clause, so five are brought
   in as abstractions.
+* `examples/vns-tw/DESIGN.md` reports a third execution of the asynchronous trials, on ZTES 0.1.1:
+  4 of the 9 combinations changed their final tour with the schedule, and the shares of the variance
+  were 23 %, 23 %, 0 % and 54 %. The asynchronous form depends on the schedule by design.
 
-**To do at release**
-* Pin ZTES in `requirements.txt` to its next release (0.1.1), which classifies case 3 of the eight
-  defects as S1.2 and documents the terms of the papers; nothing in these examples depends on that
-  change.
+**ZTES**
+* `requirements.txt` pins ZTES v0.1.1 (https://doi.org/10.5281/zenodo.24563789) instead of commit
+  78153ed, and the links to its documentation point to that release. ZTES 0.1.1 fixes a race in the
+  coordinator of workers: an abstraction brought in during a run, as a learned clause of `ksat` is,
+  could be left uninvoked when the run was judged terminal. It also classifies case 3 of the eight
+  defects as S1.2. Records under the agenda are unchanged.
 
 ## 1.0.1 (2026-11-21)
 
