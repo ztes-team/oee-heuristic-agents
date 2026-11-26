@@ -7,6 +7,8 @@ OEE Calculus*, is in preparation and is named by its title only.
 
 ## 1.0.2 (2026-11-26)
 
+https://doi.org/10.5281/zenodo.24566524
+
 No example and no record changed: the same plans give the same records, and the same checks pass.
 What changed is the version of ZTES, how the repository refers to the two papers, and the
 documentation.
