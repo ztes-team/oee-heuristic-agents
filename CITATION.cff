@@ -39,7 +39,9 @@ abstract: >-
   method is a candidate proposed by an ontology, admitted by a criterion and appended to one
   record, and every run replays. Cooperative variable neighborhood search on the travelling
   salesman problem, an adaptive agent, an exact reference (CPTL) and k-SAT as evolutive consensus.
-  Executable supplement to a paper in preparation.
+  Executable supplement to "A Calculus of Execution for Interacting Binary Relations" and to
+  "Observable, Governable, Cooperative: Execution Analytics and Adaptive Heuristic Agents in the OEE
+  Calculus" (in preparation).
 keywords: [execution calculus, metaheuristics, variable neighborhood search, travelling salesman problem, SAT, clause learning, evolutive consensus, replay]
 references:
   - type: software
@@ -53,7 +55,7 @@ references:
     doi: "10.5281/zenodo.24416120"
     repository-code: "https://github.com/ztes-team/ztes-minimal"
   - type: article
-    title: "A Calculus of Execution for Systems of Interacting Binary Relations"
+    title: "A Calculus of Execution for Interacting Binary Relations"
     authors:
       - {family-names: "Škarić", given-names: "Milan"}
       - {family-names: "Ivanović", given-names: "Aleksandar"}
@@ -63,7 +65,7 @@ references:
       - {family-names: "Radenković", given-names: "Božidar"}
     journal: "Preprints"
     year: 2026
-    doi: "10.20944/preprints202608.1545.v3"
+    doi: "10.20944/preprints202608.1545.v4"
   - type: article
     title: "Evolutive consensus for agentic AI: OEE incompleteness of external guardrails and the execution calculus for safe evolutive agents"
     authors:
@@ -80,3 +82,12 @@ references:
     end: 765
     notes: "DOI 10.2298/FUEE2604723R"
     url: "https://casopisi.junis.ni.ac.rs/index.php/FUElectEnerg/article/view/14966"
+  - type: unpublished
+    title: "Observable, Governable, Cooperative: Execution Analytics and Adaptive Heuristic Agents in the OEE Calculus"
+    authors:
+      - {family-names: "Radenković", given-names: "Miloš"}
+      - {family-names: "Prokhorov", given-names: "Sergei"}
+      - {family-names: "Labus", given-names: "Aleksandra"}
+      - {family-names: "Radenković", given-names: "Božidar"}
+    year: 2026
+    notes: "In preparation"

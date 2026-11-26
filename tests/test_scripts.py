@@ -1,8 +1,8 @@
-"""Tests of scripts/sweeps.py and scripts/trials.py, the scripts behind the results of the paper over
-many seeds and the worker trials.
+"""Tests of scripts/sweeps.py and scripts/trials.py, the scripts behind the results of the companion paper
+(in preparation) over many seeds and the worker trials.
 
 The full sweeps take minutes; here each script is checked on what can be decided quickly: one run
-per form gives the numbers of Table 7 for seed 7, the decompositions of the variance are those of
+per form gives the numbers of the forms on fri26 for seed 7, the decompositions of the variance are those of
 their definitions on tables built for the purpose, and one run by workers, under a random schedule
 and with workers killed, gives the histories of the agenda.
 """

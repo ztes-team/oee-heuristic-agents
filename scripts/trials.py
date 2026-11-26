@@ -1,4 +1,4 @@
-"""The worker trials of the paper: phase 3 run by one worker per abstraction, under random schedules
+"""The worker trials of the companion paper (in preparation): phase 3 run by one worker per abstraction, under random schedules
 and with workers killed and started again.
 
 A synchronous form reads only complete horizons, so under the conditions of Theorem K every lineage
@@ -9,15 +9,15 @@ the operating system makes of them does not). A worker may be killed before an i
 after one of its events has been appended, and is started again after a while; the number of
 workers killed depends on the run and is reported.
 
-    python scripts/trials.py vns      # Section 7.1: v1 on fri26, 40 schedules, 20 runs with workers killed
-    python scripts/trials.py forms    # Section 8.1: v3 and v4 on fri26, 20 schedules and 10 runs with kills each
-    python scripts/trials.py ftv38    # Section 8.2: v3 on ftv38, 4 schedules and 2 runs with kills
-    python scripts/trials.py tw       # Section 7.2: v1 and v3 with time windows under 3 schedules,
+    python scripts/trials.py vns      # v1 on fri26, 40 schedules, 20 runs with workers killed
+    python scripts/trials.py forms    # v3 and v4 on fri26, 20 schedules and 10 runs with kills each
+    python scripts/trials.py ftv38    # v3 on ftv38, 4 schedules and 2 runs with kills
+    python scripts/trials.py tw       # v1 and v3 with time windows under 3 schedules,
                                       #   and v2 (asynchronous) over 3 draws x 3 worlds x 3 schedules
     python scripts/trials.py          # all of them, about half an hour
     python scripts/trials.py --quick  # two runs of each kind, for a check in a few minutes
 
-The forms are those of scripts/sweeps.py and of Section 4.2 of the paper.
+The forms are those of scripts/sweeps.py.
 """
 import copy
 import random

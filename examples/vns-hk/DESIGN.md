@@ -1,6 +1,6 @@
 # Cities beside the searchers: a Held–Karp bound that proves the incumbent optimal: design (step 0)
 
-*A candidate for the paper on heuristic agents. The companion of [`vns`](../vns/DESIGN.md), whose
+*Papers: the base paper (§8.9, Table 8) and the companion paper (in preparation); see [the two papers](../../README.md#the-two-papers) in the README. The companion of [`vns`](../vns/DESIGN.md), whose
 searchers it keeps unchanged; only what is new is described here. Tags: [C] epistemic, [ω]
 ontological, [τ] eschatological.*
 

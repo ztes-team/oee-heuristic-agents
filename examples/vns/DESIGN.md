@@ -1,8 +1,8 @@
 # Variable neighborhood search by cooperating searchers: design (step 0)
 
-*Not in the paper on the calculus of execution (a candidate for the paper on heuristic agents). Tags: [C] epistemic, [ω] ontological, [τ] eschatological (see the [README of the examples of ZTES](https://github.com/ztes-team/ztes-minimal/blob/main/examples/README.md)).*
+*Papers: the base paper (§8.9, Table 8) and the companion paper (in preparation); see [the two papers](../../README.md#the-two-papers) in the README. Tags: [C] epistemic, [ω] ontological, [τ] eschatological (see the [README of the examples of ZTES](https://github.com/ztes-team/ztes-minimal/blob/main/examples/README.md)).*
 
-**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/main/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and the synchronous one gives the same record under every schedule, with no lock, no message and no master process. A third form adapts VNS to the asymmetric space of execution: the neighborhood of a tour is resolved against the record, so the descent does not take the way back to a tour the record already holds; the criterion stays the same. A fourth form adds a certificate relative to the record, admitted by a widened criterion.
+**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/main/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and in the synchronous one every lineage has the same history under every schedule, with no lock, no message and no master process. A third form adapts VNS to the asymmetric space of execution: the neighborhood of a tour is resolved against the record, so the descent does not take the way back to a tour the record already holds; the criterion stays the same. A fourth form adds a certificate relative to the record, admitted by a widened criterion.
 
 VNS (Mladenović and Hansen 1997; Hansen and Mladenović 2001) alternates a random perturbation of
 the current solution in the k-th neighborhood (the shake) with a local descent, and returns to the
@@ -131,7 +131,7 @@ tour is resolved against the record (D1): the descent takes the first improving 
 finished rounds have not recorded, and the first improving move only when every improving one leads
 to a recorded tour. As the record grows the neighborhood can only shrink,
 C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C). It reads only rounds that are finished when its round begins, a
-complete horizon, so the synchronous form keeps the same record under every schedule. The
+complete horizon, so in the synchronous form every lineage keeps the same history under every schedule (Theorem K; the order of the whole record may differ). The
 criterion is that of v1, which admits any improving move: the new form is a change of ontology alone (D2).
 
 v3 reads the steps of all searchers through the binding `history`, declared `"frozen": true`: ZTES
@@ -151,7 +151,7 @@ tour that no move shortens, and the searcher walks into known ground. Criterion 
 v1 admits and, in addition, a certificate relative to the record: no move shortens the tour to a tour
 the rounds before its own have not recorded. Once this holds on a prefix it holds on every extension:
 the prefixes on which it holds form an upper set, open in the Alexandrov topology (Proposition 5(b)
-of the paper). Since v1 admits a subset of what v2 admits, this governed change widens admission.
+of the base paper). Since v1 admits a subset of what v2 admits, this governed change widens admission.
 Ontology v4 is the strict descent bound to criterion v2: it never enters a recorded tour and
 certifies relative to the record when nothing else is left.
 

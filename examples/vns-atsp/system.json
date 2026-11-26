@@ -89,7 +89,7 @@
     {"kpi": true, "note": "execution indicators, once, at the end"}
   ],
   "expect": {
-    "note": "synchronous cooperation gives the same record under every schedule, so expect has no any_schedule part",
+    "note": "synchronous cooperation gives the same history of every lineage under every schedule, so expect has no any_schedule part",
     "events": 1195,
     "states": {"draw": "closed", "search_1": "wait", "search_2": "wait", "search_3": "wait", "incumbent": "wait"},
     "last": {"incumbent": {"r": 19, "src": [1, 2], "length": 1547}},

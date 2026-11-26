@@ -1,6 +1,6 @@
 # Variable neighborhood search on an asymmetric instance: design (step 0)
 
-*Not in the paper on the calculus of execution (a candidate for the paper on heuristic agents). The companion of [`vns`](../vns/DESIGN.md), whose design this one follows; only what differs is described here. Tags: [C] epistemic, [ω] ontological, [τ] eschatological.*
+*Papers: the base paper (§8.9, Table 8) and the companion paper (in preparation); see [the two papers](../../README.md#the-two-papers) in the README. The companion of [`vns`](../vns/DESIGN.md), whose design this one follows; only what differs is described here. Tags: [C] epistemic, [ω] ontological, [τ] eschatological.*
 
 **What this example adds.** The same five abstractions, the same bindings, plan and criteria as `vns`, on an asymmetric instance. What changes is the instance and the neighborhood, and nothing in the lifting: a neighborhood is a relation, and the calculus does not ask whether it is symmetric. The asymmetric neighborhood of `vns` (ontology v3, the neighbors of a tour resolved against the record) carries over unchanged, and on this instance it reaches a shorter tour.
 

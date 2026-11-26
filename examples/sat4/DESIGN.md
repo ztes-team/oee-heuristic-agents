@@ -1,8 +1,8 @@
 # A 4-SAT conflict and a reusable clause
 
-This example executes the two-clause construction in Section 4.3 of the paper. It records a local conflict, derives a clause that can be used across branches, and uses that evidence to govern a retry. The input formula has four variables and two clauses of four literals each.
+This example executes the two-clause construction of §7.1 of the base paper, which the companion paper (in preparation) also uses (see [the two papers](../../README.md#the-two-papers) in the README). It records a local conflict, derives a clause that can be used across branches, and uses that evidence to govern a retry. The input formula has four variables and two clauses of four literals each.
 
-## Formula and evidence
+## 1. Problem: the formula and the evidence
 
 The variable numbers 1 through 4 denote $x,a,b,c$. A negative number denotes a negated literal. The original formula is the conjunction of two clauses.
 
@@ -14,7 +14,7 @@ The first branch sets $a=b=c=0$. This makes $D_1$ unit and forces $x=1$. Under t
 
 The resolution proof uses $D_1$ and $D_2$ as parents and $x$ as the pivot. Its result is $L=(a\lor b\lor c)$. Because both parents are original clauses, the derivation is valid for the entire formula. The retry sets $a=b=0$. At that prefix the two original clauses still have two unassigned literals each. The learned clause is unit and forces $c=1$. The final assignment is $x=a=b=0,\ c=1$ and satisfies both original clauses.
 
-## Abstractions and checks
+## 2. Lifting: the abstractions and their checks
 
 | Abstraction | Proposal | Admission check |
 |---|---|---|
@@ -27,7 +27,7 @@ The resolution proof uses $D_1$ and $D_2$ as parents and $x$ as the pivot. Its r
 
 Clause indices 0 and 1 refer to the input clauses. The admitted resolvent has index 2 in the visible clause list. Branch indices distinguish the conflict under the first assumptions from the later propagation. The governing event activates the retry rule under R1. R2 checks the proposals and judgments under their original prefixes and specification versions. The replay of judgments alone shows that every branch is a correct step; the full replay also shows that every branch is the one the active ontology proposed, so the retry follows the governing event.
 
-## Reproduction
+## 3. Plan, expected end and reproduction
 
 From the repository root, use the ZTES revision in `requirements.txt`.
 
@@ -42,9 +42,9 @@ python -m pytest -q tests/test_sat4.py tests/test_sat4_ksat.py
 
 The expected record has 21 events including setup. During execution it records two branches, two propagations, one conflict, one resolution proof, one change of policy and one satisfying assignment. The tests enumerate all 16 assignments independently. Exactly 14 satisfy the formula, every such assignment satisfies the resolvent, and neither completion of the first branch satisfies the formula.
 
-This worked trace uses one fixed probe and one clause-guided retry. The comparison of occurrence-based and conflict-activity branching proposed in Section 10.3 of the paper uses families of formulas and matched search budgets.
+This worked trace uses one fixed probe and one clause-guided retry. The comparison of occurrence-based and conflict-activity branching proposed in the companion paper uses families of formulas and matched search budgets.
 
-## Beyond the instance
+## 4. Beyond the instance
 
 The criteria are written for any CNF formula; only the ontologies follow this trace. `tests/test_sat4_ksat.py` checks both claims against all assignments. With only its constants changed, the system executes the same trace for every width $k$ from 2 to 8: two clauses $(x\lor A)$ and $(\lnot x\lor A)$ with $|A|=k-1$, under random variable numbers, signs and orders. The test runs 56 such instances and checks replay, interruption and workers. On 300 random $k$-CNF formulas with $k$ from 2 to 6, every unit, conflict, resolvent and witness the criteria admit is checked against the models of the formula.
 

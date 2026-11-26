@@ -1,17 +1,20 @@
-"""The results of the paper over many seeds: one run per seed and form under the agenda.
+"""The results of the companion paper over many seeds: one run per seed and form under the agenda.
+
+The companion paper is "Observable, Governable, Cooperative: Execution Analytics and Adaptive
+Heuristic Agents in the OEE Calculus", in preparation.
 
 Every number is an indicator read from the record of a run, by the kpi abstraction of the example
 or, for the round of the first return, by the function below; nothing is measured during a run.
 The runs are under the agenda, so every number is the same on every host.
 
-    python scripts/sweeps.py fri26      # Table 7: the forms on fri26, seeds 1-40, and the paired counts
-    python scripts/sweeps.py agent      # Table 10: the adaptive agent against the fixed forms on fri26
-    python scripts/sweeps.py ftv38      # Table 8: the forms on ftv38, seeds 1-40
-    python scripts/sweeps.py tw         # Table 9: time windows with and without the chance constraint
-    python scripts/sweeps.py variance   # Section 7.2: algorithm x environment, shares of the variance
+    python scripts/sweeps.py fri26      # the forms on fri26, seeds 1-40, and the paired counts
+    python scripts/sweeps.py agent      # the adaptive agent against the fixed forms on fri26
+    python scripts/sweeps.py ftv38      # the forms on ftv38, seeds 1-40
+    python scripts/sweeps.py tw         # time windows with and without the chance constraint
+    python scripts/sweeps.py variance   # algorithm x environment, shares of the variance
     python scripts/sweeps.py            # all of them, about twenty minutes
 
-The forms are those of Section 4.2 of the paper: v1 the plan (synchronous), v2 asynchronous, v3 the
+The forms are those of the companion paper: v1 the plan (synchronous), v2 asynchronous, v3 the
 asymmetric neighborhood, v4 the strict descent with criterion v2 (the certificate relative to the
 record). Each is a governed change of the three searchers before phase 3, as in the tests.
 """
@@ -94,7 +97,7 @@ SEEDS = range(1, 41)
 
 
 def fri26():
-    print("## Table 7: the forms of the searchers on fri26 (optimum 937)\n")
+    print("## The forms of the searchers on fri26 (optimum 937)\n")
     print("| Form | Seed 7: incumbent | Seed 7: returns | Seed 7: moves | Seeds 1-40: optimum reached | "
           "Seeds 1-40: returns per run | moves per run | relative certificates per run |")
     print("|---|---|---|---|---|---|---|---|")
@@ -113,7 +116,7 @@ def fri26():
 
 
 def agent():
-    print("## Table 10: the agent against the fixed forms on fri26, seeds 1-40\n")
+    print("## The agent against the fixed forms on fri26, seeds 1-40\n")
     print("| Form | Reaches 937 | Mean final length | Returns per run | Relative certificates per run |")
     print("|---|---|---|---|---|")
     start = System(ROOT / "vns").definition["constants"]["START"]
@@ -144,7 +147,7 @@ def agent():
 
 
 def ftv38():
-    print("## Table 8: the forms on ftv38 (optimum 1,530), R = 20\n")
+    print("## The forms on ftv38 (optimum 1,530), R = 20\n")
     print("| Form | Seed 2: end | Seed 2: returns | Seeds 1-40: runs ending at 1,532 | mean gap | "
           "returns per run | moves per run | runs reaching 1,530 |")
     print("|---|---|---|---|---|---|---|---|")
@@ -164,7 +167,7 @@ def ftv38():
 
 
 def tw():
-    print("## Table 9: time windows and precedence on ftv38, draw seeds 1-20 (world seed 11), R = 10\n")
+    print("## Time windows and precedence on ftv38, draw seeds 1-20 (world seed 11), R = 10\n")
     print("| Problem | Form | Optimum reached | Mean gap | On time, world (of 20): mean (min) | "
           "On time, audit: mean (min-max) | Returns (of 30) | all feasible |")
     print("|---|---|---|---|---|---|---|---|")
@@ -202,11 +205,11 @@ def shares(table, rows, cols):
     return tuple(round(100 * x / total, 1) for x in (ss_row, ss_col, ss_int))
 
 
-DRAWS, WORLDS = range(1, 7), range(11, 17)          # the design of Section 7.2; world seed 11 is that of the instance
+DRAWS, WORLDS = range(1, 7), range(11, 17)          # the design of the companion paper; world seed 11 is that of the instance
 
 
 def variance():
-    print("## Section 7.2: algorithm x environment, v3 with the chance constraint under the agenda\n")
+    print("## Algorithm x environment, v3 with the chance constraint under the agenda\n")
     length, audit = {}, {}
     for d in DRAWS:
         for w in WORLDS:
