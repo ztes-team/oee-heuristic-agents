@@ -7,6 +7,8 @@ OEE Calculus*, is in preparation and is named by its title only.
 
 ## 1.0.3 (2026-11-27)
 
+https://doi.org/10.5281/zenodo.24608970
+
 No example and no record changed, and the same checks pass. The wording follows the revised text of
 the base paper.
 
