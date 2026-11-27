@@ -13,16 +13,16 @@ This repository is the executable supplement of two papers.
 
 The examples of the base paper that run without heuristics (√2, the Dedekind cut, prime witnesses,
 factorization, the payment, exact TSP, the ant colony and the eight defects) are reproduced in
-[ztes-minimal](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/REPRODUCING.md).
+[ztes-minimal](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/REPRODUCING.md).
 
 ```bash
-pip install -r requirements.txt          # Python 3.12 or later; ZTES v0.1.1, the release the examples were checked with
+pip install -r requirements.txt          # Python 3.12 or later; ZTES v0.1.2, the release the examples were checked with
 python -m pytest -q                      # every check below, in about seven minutes
 ```
 
 Every `run` ends with `R2  replay of N events: OK` (the whole record replayed from the empty prefix)
 and `Expect  OK` (the end stated in `system.json` holds). The terms of the output are those of
-ZTES; [its glossary](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/glossary.md) gives
+ZTES; [its glossary](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/docs/glossary.md) gives
 them next to the terms of the papers. In particular, the output prints Not Yet for an invocation
 that gave no candidate, which the base paper calls Pending.
 
@@ -56,8 +56,8 @@ so five are brought in as new abstractions.
 |---|---|
 | C1 Two interacting relations | `ksat`: a learned clause changes the logic, the clauses being the criteria; `adapt` changes the control, the decision policy (`test_a_learned_clause_brings_in_its_abstraction_and_the_next_round`, `test_the_change_of_policy_changes_the_course_and_not_the_verdict`) |
 | C2 Inseparable substrate | governed changes replayed in `vns-adaptive` and `ksat`; R2 for every example |
-| C3 Taxonomy of non-termination | the refutation of PHP(4,3): non-convergence certified, not only observed |
-| C4 Nondeterminism in the record | under every schedule of independent workers, and with workers killed and started again, each lineage has the history it has under the agenda (`test_the_same_lineages_under_random_schedules_and_killed_workers`; `scripts/trials.py`) |
+| C3 Taxonomy of execution outcomes | the refutation of PHP(4,3): non-convergence certified, not only observed |
+| C4 Nondeterminism in the record | in every schedule tested of independent workers, and with workers killed and started again, each lineage has the history it has under the agenda; Theorem K gives this for every fair schedule (`test_the_same_lineages_under_random_schedules_and_killed_workers`; `scripts/trials.py`) |
 | C5 Agnosticism | the same Z₀, with no code specific to these examples, executes VNS and CDCL |
 
 ## The companion paper

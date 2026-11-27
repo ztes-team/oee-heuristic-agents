@@ -49,11 +49,11 @@ repository, the command that produces it and the test that checks it.
 The examples are systems for [ZTES](https://github.com/ztes-team/ztes-minimal), and their output is
 that of ZTES. If the calculus is new to you, read first, in ztes-minimal:
 
-* [`docs/tour.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/tour.md): one invocation
+* [`docs/tour.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/docs/tour.md): one invocation
   from start to finish, the base paper mapped to the code;
-* [`docs/glossary.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/glossary.md): the
+* [`docs/glossary.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/docs/glossary.md): the
   terms of the papers next to those of the output;
-* [`docs/writing-a-system.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/docs/writing-a-system.md):
+* [`docs/writing-a-system.md`](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/docs/writing-a-system.md):
   the files of an abstraction, which every example here follows.
 
 Eight terms are enough to read this page:
@@ -67,7 +67,7 @@ Eight terms are enough to read this page:
 | Not Yet | the output's name for an invocation that gave no candidate (Pending in the base paper); vns-tw also uses Not Yet for a premature city, in the sense of a goal |
 | governed change | a new version of a specification, admitted as an event; in force from that event (R1) |
 | R2 | replay: every event re-derived and re-judged on its own prefix |
-| workers | one process per abstraction instead of the agenda; for results determined by their inputs, every lineage has the same history under every schedule (Theorem K) |
+| workers | one process per abstraction instead of the agenda; for results determined by their inputs, every lineage has the same history under every fair schedule (Theorem K), as in every schedule tested |
 
 ## Repository layout
 
@@ -80,7 +80,7 @@ tests/                    the checks of every example and of the scripts (docs/t
 REPRODUCING.md            every result of both papers: command, output, test
 CHANGELOG.md              what changed between versions
 docs/tests.md             what each test shows
-requirements.txt          ZTES v0.1.1, the release the examples were checked with
+requirements.txt          ZTES v0.1.2, the release the examples were checked with
 ```
 
 ## vns: variable neighborhood search by cooperating searchers
@@ -91,8 +91,8 @@ descent, the change of neighborhood and the rounds are not loops in a body, and 
 record. The criterion admits any step of VNS, not only the one the strategy chose (D2).
 
 In the plan the searchers cooperate synchronously: each shakes the incumbent of the round it has
-finished and waits for it, so every lineage has the same history under every schedule of the
-workers. Version 2 of the three searcher ontologies makes the cooperation asynchronous (the best
+finished and waits for it, so every lineage has the same history under every fair schedule of the
+workers (Theorem K). Version 2 of the three searcher ontologies makes the cooperation asynchronous (the best
 optimum certified so far, as it stands): the same criteria, and another valid course under each
 schedule. These are the two classical forms of cooperative parallel VNS (replicated shaking, and
 cooperation through a central memory); here the master process is replaced by a horizon. With seed
@@ -104,7 +104,7 @@ and in about half of the rounds the descent takes it and certifies the very tour
 indicator `returns`: 14 of 30 with seed 7). Version 3 adapts VNS to the asymmetric space of
 execution: the neighborhood of a tour is resolved against the record, and the descent does not take
 a move to a tour the finished rounds have recorded while another improving move exists. The
-criterion is unchanged, the record is still the same under every schedule, and over forty seeds the
+criterion is unchanged, the history of every lineage is still the same under every fair schedule, and over forty seeds the
 optimum is reached in 28 instead of 22. Version 4 with criterion v2 adds a certificate relative to
 the record (every shorter neighbor is already recorded), an upper set of the prefix order: over
 forty seeds the returns fall from about 15 per run to 2 in all, both shakes that cancelled, at
@@ -146,7 +146,7 @@ incumbent of the searchers. The criterion of a city admits any move in that dire
 potential gives a valid bound; that of the tree admits any minimum 1-tree. In round 18 the bound is
 936.10, and the abstraction `proof` records that no tour is shorter than the incumbent, 937. Every
 horizon is complete before it is read, so the 33 workers give the same history of every lineage
-under every schedule. Aimed at the starting tour instead (ontology v2 of the cities, the same
+under every fair schedule (Theorem K). Aimed at the starting tour instead (ontology v2 of the cities, the same
 criteria), the bound needs 330 rounds. See [`examples/vns-hk/DESIGN.md`](examples/vns-hk/DESIGN.md).
 
 ## vns-adaptive: an agent changes the form of the search
@@ -161,7 +161,7 @@ any time, and the next form, carried exactly, only past the tolerance and on the
 gives; it admits nothing else. With seed 7 the forms change from rounds 3 and 7, and the incumbent
 reaches 937 in round 4. Over seeds 1–40 the agent ends shorter than its starting form in 7 seeds and
 longer in 2, but not shorter than the best fixed form chosen in hindsight. The searchers wait for the
-decision of each round, so a change is at the same position of every lineage under every schedule.
+decision of each round, so a change is at the same position of every lineage under every fair schedule.
 See [`examples/vns-adaptive/DESIGN.md`](examples/vns-adaptive/DESIGN.md).
 
 ## CPTL as the exact reference case
@@ -202,7 +202,7 @@ replay. `scripts/ksat_system.py` writes the system of any DIMACS formula, and th
 Python 3.12 or later.
 
 ```
-pip install -r requirements.txt               # ZTES v0.1.1 from GitHub, the release the examples were checked with
+pip install -r requirements.txt               # ZTES v0.1.2 from GitHub, the release the examples were checked with
 python -m ztes run examples/vns               # under the agenda: the report, R2 and the expected end
 python -m ztes run examples/vns --workers     # phase 3 by one worker per abstraction
 python -m ztes run examples/vns --record DIR  # keep the record; then: python -m ztes explain DIR 220
@@ -281,7 +281,7 @@ result of the papers.
 2. Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. *Observable, Governable, Cooperative:
    Execution Analytics and Adaptive Heuristic Agents in the OEE Calculus*. In preparation.
 3. Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. *ZTES: a minimal Zero Tier Execution
-   Substrate for the OEE calculus*, software, version 0.1.1, Zenodo, 2026. https://doi.org/10.5281/zenodo.24563789
+   Substrate for the OEE calculus*, software, version 0.1.2, Zenodo, 2026. https://doi.org/10.5281/zenodo.24608321
 4. Ivanović, A.; Radenković, M.; Prokhorov, S.; Labus, A.; Radenković, B. Zero Tier Execution
    Substrate for Evolutionary Software Systems. *Systems* **2026**, 14, 547.
    https://doi.org/10.3390/systems14050547

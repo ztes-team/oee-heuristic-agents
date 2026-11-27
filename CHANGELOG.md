@@ -5,6 +5,20 @@ for Interacting Binary Relations* (https://doi.org/10.20944/preprints202608.1545
 paper, *Observable, Governable, Cooperative: Execution Analytics and Adaptive Heuristic Agents in the
 OEE Calculus*, is in preparation and is named by its title only.
 
+## 1.0.3 (2026-11-27)
+
+No example and no record changed, and the same checks pass. The wording follows the revised text of
+the base paper.
+
+* `requirements.txt` pins ZTES v0.1.2 (https://doi.org/10.5281/zenodo.24608321), whose code is that of 0.1.1; the links to its
+  documentation point to that release, whose experiment E7 and glossary state what a finite record
+  shows about Theorem 4.
+* A claim that every lineage has the same history names the fair schedules of Theorem K; `ksat`
+  states its conditions: no merge or boundary stream, and each governing change, a learned clause or
+  the change of policy by `adapt`, at the same position of its lineage (K2). Claims from runs name
+  the schedules tested.
+* C3 of Table 10 is the taxonomy of execution outcomes.
+
 ## 1.0.2 (2026-11-26)
 
 https://doi.org/10.5281/zenodo.24566524

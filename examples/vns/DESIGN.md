@@ -1,8 +1,8 @@
 # Variable neighborhood search by cooperating searchers: design (step 0)
 
-*Papers: the base paper (§8.9, Table 8) and the companion paper (in preparation); see [the two papers](../../README.md#the-two-papers) in the README. Tags: [C] epistemic, [ω] ontological, [τ] eschatological (see the [README of the examples of ZTES](https://github.com/ztes-team/ztes-minimal/blob/v0.1.1/examples/README.md)).*
+*Papers: the base paper (§8.9, Table 8) and the companion paper (in preparation); see [the two papers](../../README.md#the-two-papers) in the README. Tags: [C] epistemic, [ω] ontological, [τ] eschatological (see the [README of the examples of ZTES](https://github.com/ztes-team/ztes-minimal/blob/v0.1.2/examples/README.md)).*
 
-**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/v0.1.1/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and in the synchronous one every lineage has the same history under every schedule, with no lock, no message and no master process. A third form adapts VNS to the asymmetric space of execution: the neighborhood of a tour is resolved against the record, so the descent does not take the way back to a tour the record already holds; the criterion stays the same. A fourth form adds a certificate relative to the record, admitted by a widened criterion.
+**What this example adds.** After [`aco-draw`](https://github.com/ztes-team/ztes-minimal/tree/v0.1.2/examples/aco-draw) in ZTES, which lifts a population heuristic: a trajectory heuristic, variable neighborhood search (VNS), run by three cooperating searchers. Every loop of the method (the descent to a local optimum, the change of neighborhood, the rounds) is eschatological induction: the next step reads the previous one from the record. A local optimum is an admitted certificate. The two classical forms of cooperative parallel VNS are here one horizon apart, and in the synchronous one every lineage has the same history under every schedule, with no lock, no message and no master process. A third form adapts VNS to the asymmetric space of execution: the neighborhood of a tour is resolved against the record, so the descent does not take the way back to a tour the record already holds; the criterion stays the same. A fourth form adds a certificate relative to the record, admitted by a widened criterion.
 
 VNS (Mladenović and Hansen 1997; Hansen and Mladenović 2001) alternates a random perturbation of
 the current solution in the k-th neighborhood (the shake) with a local descent, and returns to the
@@ -95,12 +95,12 @@ the move index and the tour with its length.
 | it waits | until every searcher has finished the round | never |
 | classical counterpart | replicated-shaking VNS (García-López et al. 2002) | cooperative neighborhood VNS (Crainic et al. 2004) |
 | the master process of the original | none: the complete horizon of `incumbent` | none: the record |
-| with one worker per abstraction | every lineage has the same history under every schedule | another valid course under each schedule; every record replays |
+| with one worker per abstraction | every lineage has the same history under every fair schedule (Theorem K) | another valid course under each schedule; every record replays |
 
 In the synchronous form the incumbent of round r is computed only when the three certified optima
 of round r are recorded (a complete horizon), and each searcher waits for it. All inputs of every
 searcher are then determined by the record, so each lineage has the history it has under the
-agenda, under any schedule of the workers and after any of them fails (Theorem K); only the
+agenda, under any fair schedule of the workers and after any of them fails (Theorem K); only the
 interleaving of the record differs. In the model there is no lock and no message; the one point of
 synchronization is the conditional insert of the store, which gives C its single order.
 
@@ -131,7 +131,7 @@ tour is resolved against the record (D1): the descent takes the first improving 
 finished rounds have not recorded, and the first improving move only when every improving one leads
 to a recorded tour. As the record grows the neighborhood can only shrink,
 C ≼ C′ ⇒ N(x | C′) ⊆ N(x | C). It reads only rounds that are finished when its round begins, a
-complete horizon, so in the synchronous form every lineage keeps the same history under every schedule (Theorem K; the order of the whole record may differ). The
+complete horizon, so in the synchronous form every lineage keeps the same history under every fair schedule (Theorem K; the order of the whole record may differ). The
 criterion is that of v1, which admits any improving move: the new form is a change of ontology alone (D2).
 
 v3 reads the steps of all searchers through the binding `history`, declared `"frozen": true`: ZTES

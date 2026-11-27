@@ -199,7 +199,7 @@ def definition(variables, formula, name="ksat", title=None, after=AFTER):
 
 def expected_end(definition_):
     """The expected end of the run of a definition under the agenda: its number of events, the
-    state of every abstraction and the verdict. By Theorem K it holds under every schedule."""
+    state of every abstraction and the verdict. By Theorem K it holds under every fair schedule."""
     from ztes.substrate.store import MemoryStore, read
     from ztes.system.system import System
     system, store = System.from_dict(definition_), MemoryStore()

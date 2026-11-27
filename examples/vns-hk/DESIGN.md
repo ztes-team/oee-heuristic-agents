@@ -44,7 +44,7 @@ of round t; in round 0 all are 0), then the 26 potentials of round t + 1. A city
 tree of its round, and the tree waits for all 26 potentials. The step of round t aims at the
 incumbent of round min(t, R − 1) of the searchers, and a city waits for it: the cities of round t
 cannot run ahead of the searchers' round t. Every horizon is complete before it is read, so by
-Theorem K every lineage has the same history under every schedule of the workers, as in the
+Theorem K every lineage has the same history under every fair schedule of the workers, as in the
 synchronous form of `vns`.
 
 **The step.** Each city computes the same step size, (2 / 2^h)·(SC·U − L) / Σ(deg − 2)², where U

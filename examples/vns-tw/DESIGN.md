@@ -86,7 +86,7 @@ repair, which tends to undo the shake, so v3 applies to both.
 | Source | Enters through | Measure |
 |---|---|---|
 | the algorithm: the draws of the shakes | ω: what is proposed | given (SplitMix64, recorded) |
-| the schedule of the workers: the order of C | C: what is known when | none needed for the synchronous forms (the history of every lineage is the same under every schedule, Theorem K); posited for the asynchronous form (random pauses) |
+| the schedule of the workers: the order of C | C: what is known when | none needed for the synchronous forms (the history of every lineage is the same under every fair schedule, Theorem K); posited for the asynchronous form (random pauses) |
 | the environment: the scenarios | τ: what is admitted | given (SplitMix64, recorded) |
 
 All three are in the record, so every indicator is a function of the record and each source can be

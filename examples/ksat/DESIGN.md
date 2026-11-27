@@ -41,7 +41,7 @@ The next frame is computed as follows:
    - If none has anything to say, the round waits for the decision of this round and adds its literals at the next level.
    - Otherwise it adds the forced literals in the order of the clauses. A unit whose literal is already false counts as a conflict.
 
-Each clause speaks about a frame that is already closed, and the round closes only when every expected speaker is in. Every realization is therefore a function of complete horizons, and every lineage has the same history under every schedule (Theorem K). Workers run without any synchronization other than the record.
+Each clause speaks about a frame that is already closed, and the round closes only when every expected clause has reported. Every realization is therefore a function of complete horizons. No merge or boundary stream is read, and `decide` waits for `adapt`, so each governing change, a learned clause or the change of policy, is at the same position of its lineage. Theorem K then gives the same history of every lineage under every fair schedule (K2), and every schedule tested shows it. Workers run without any synchronization other than the record.
 
 ## 4. Design decisions: two forms of adaptation
 
